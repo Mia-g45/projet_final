@@ -22,7 +22,6 @@ class App:
             self.apparition_souris()
 
 
-
     def draw(self):
         pyxel.cls(self.couleur_fond)
         if pyxel.frame_count < self.temps_titre:
@@ -61,7 +60,8 @@ class App:
 
     def chateau(self):
         pyxel.blt(50, 70, 1, 0, 0, 25, 70, 0)
-        pyxel.blt(165, 70, 1, 0, 0, 25, 70, 0)
+        pyxel.blt(164, 70, 1, 0, 0, 25, 70, 0)
+        pyxel.blt(75, 40, 1, 32, 0, 90, 101, 0)
 
     def apparition_souris(self):
         pyxel.mouse(True)

@@ -17,7 +17,7 @@ class App:
         if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
             if self.etat == "titre" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le titre
                 self.etat = "texte"
-                self.couleur_fond = 5
+                self.couleur_fond = 0
                 self.apparition_souris()
                 self.temps = pyxel.frame_count
             elif self.etat == "texte" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le texte
@@ -71,68 +71,40 @@ class App:
 
     def texte(self):
         self.couleur_fond = 0
-        pyxel.blt(50, 40, 0, 50, 8, 3, 8, 0)#I
-        pyxel.blt(54, 40, 0, 16, 16, 2, 8, 0)#l
+        pyxel.blt(44, 40, 0, 50, 8, 3, 8, 0)#I
+        pyxel.blt(48, 40, 0, 16, 16, 2, 8, 0)#l
 
-        pyxel.blt(60, 39, 0, 16, 24, 5, 11, 0)#é
-        pyxel.blt(66, 40, 0, 21, 24, 5, 8, 0)#t
-        pyxel.blt(72, 42, 0, 26, 26, 5, 6, 0)#a
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#i
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#t
+        pyxel.blt(54, 39, 0, 16, 24, 5, 11, 0)#é
+        pyxel.blt(60, 40, 0, 21, 24, 5, 8, 0)#t
+        pyxel.blt(66, 42, 0, 26, 26, 5, 6, 0)#a
+        pyxel.blt(72, 40, 0, 19, 16, 1, 8, 0)#i
+        pyxel.blt(74, 40, 0, 21, 24, 5, 8, 0)#t
 
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#u
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#n
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
+        pyxel.blt(82, 42, 0, 21, 18, 5, 6, 0)#u
+        pyxel.blt(88, 42, 0, 27, 18, 5, 6, 0)#n
+        pyxel.blt(94, 42, 0, 33, 18, 5, 6, 0)#e
 
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#f
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#o
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#i
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#s
+        pyxel.blt(102, 40, 0, 32, 24, 3, 8, 0)#f
+        pyxel.blt(106, 42, 0, 35, 26, 5, 6, 0)#o
+        pyxel.blt(112, 40, 0, 19, 16, 1, 8, 0)#i
+        pyxel.blt(114, 42, 0, 40, 26, 5, 6, 0)#s
 
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#,
+        pyxel.blt(120, 46, 0, 39, 21, 2, 3, 0)#,
 
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#u
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#u
+        pyxel.blt(124, 42, 0, 21, 18, 5, 6, 0)#u
+        pyxel.blt(130, 42, 0, 27, 18, 5, 6, 0)#u
 
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#j
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#u
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#n
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
+        pyxel.blt(138, 40, 0, 41, 16, 4, 8, 0)#j
+        pyxel.blt(143, 42, 0, 33, 18, 5, 6, 0)#e
+        pyxel.blt(149, 42, 0, 21, 18, 5, 6, 0)#u
+        pyxel.blt(155, 42, 0, 27, 18, 5, 6, 0)#n
+        pyxel.blt(161, 42, 0, 33, 18, 5, 6, 0)#e
 
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#h
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#o
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#m
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#m
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
-
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#p
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#r
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#d
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#u
-
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#d
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#a
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#n
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#s
-
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#l
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#a
-
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#f
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#o
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#r
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#ê
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#t
-
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#n
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#o
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#i
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#r
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
-
-        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#.
+        pyxel.blt(169, 40, 0, 46, 16, 6, 8, 0)#h
+        pyxel.blt(175, 42, 0, 35, 26, 5, 6, 0)#o
+        pyxel.blt(181, 42, 0, 46, 26, 6, 6, 0)#m
+        pyxel.blt(187, 42, 0, 46, 26, 6, 6, 0)#m
+        pyxel.blt(193, 42, 0, 33, 18, 5, 6, 0)#e
 
     def apparition_souris(self):
         pyxel.mouse(True)

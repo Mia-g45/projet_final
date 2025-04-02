@@ -31,6 +31,8 @@ class App:
         if self.etat == "titre": #afficher l'image avec le titre
             self.cadre()
             self.titre()
+        if self.etat == "texte":
+            self.texte()
         if self.etat == "chateau": #afficher l'image avec le chateau
             self.chateau()
 
@@ -66,6 +68,71 @@ class App:
         pyxel.blt(50, 70, 1, 0, 0, 25, 70, 0)
         pyxel.blt(164, 70, 1, 0, 0, 25, 70, 0)
         pyxel.blt(75, 40, 1, 32, 0, 90, 101, 0)
+
+    def texte(self):
+        self.couleur_fond = 0
+        pyxel.blt(50, 40, 0, 50, 8, 3, 8, 0)#I
+        pyxel.blt(54, 40, 0, 16, 16, 2, 8, 0)#l
+
+        pyxel.blt(60, 39, 0, 16, 24, 5, 11, 0)#é
+        pyxel.blt(66, 40, 0, 21, 24, 5, 8, 0)#t
+        pyxel.blt(72, 42, 0, 26, 26, 5, 6, 0)#a
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#i
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#t
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#u
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#n
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#f
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#o
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#i
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#s
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#,
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#u
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#u
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#j
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#u
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#n
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#h
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#o
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#m
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#m
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#p
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#r
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#d
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#u
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#d
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#a
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#n
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#s
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#l
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#a
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#f
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#o
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#r
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#ê
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#t
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#n
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#o
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#i
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#r
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#e
+
+        pyxel.blt(50, 10, 0, 50, 8, 3, 8, 0)#.
 
     def apparition_souris(self):
         pyxel.mouse(True)

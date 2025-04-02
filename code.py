@@ -13,7 +13,6 @@ class App:
 
 
     def update(self):
-        print(self.etat)
 
         if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
             if self.etat == "titre" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le titre

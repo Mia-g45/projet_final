@@ -1,33 +1,38 @@
 import pyxel
 
 
-
 class App:
     def __init__(self):
         pyxel.init(240, 140, title="phantom castle", fps=60)
         pyxel.load("images.pyxres")
         self.couleur_fond = 0
-        self.temps_titre = 100 #temps d'affichage 1ère image
-        self.temps_texte = 200 #
+        self.etat = "titre" #etat de l'écran
+        self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calcules
         pyxel.run(self.update, self.draw)
         pyxel.show() #si on appuie sur la touche echap la fenêtre se ferme
 
 
     def update(self):
-        if pyxel.frame_count == self.temps_titre: #nettoyer l'écran aprés le titre
-            self.couleur_fond = 5
-        if pyxel.frame_count == self.temps_texte: #nettoyer l'écran aprés le texte
-            self.couleur_fond = 0
-        if pyxel.frame_count == 100: #apparition de la souris au bout d'un certain temps
-            self.apparition_souris()
+        print(self.etat)
+
+        if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
+            if self.etat == "titre" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le titre
+                self.etat = "texte"
+                self.couleur_fond = 5
+                self.apparition_souris()
+                self.temps = pyxel.frame_count
+            elif self.etat == "texte" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le texte
+                self.couleur_fond = 0
+                self.etat = "chateau"
+
 
 
     def draw(self):
         pyxel.cls(self.couleur_fond)
-        if pyxel.frame_count < self.temps_titre:
+        if self.etat == "titre": #afficher l'image avec le titre
             self.cadre()
             self.titre()
-        if pyxel.frame_count > 200:
+        if self.etat == "chateau": #afficher l'image avec le chateau
             self.chateau()
 
     def cadre(self):

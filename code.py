@@ -1,28 +1,37 @@
 import pyxel
-
+import random
 
 class App:
     def __init__(self):
         pyxel.init(240, 140, title="phantom castle", fps=60)
         pyxel.load("images.pyxres")
-        self.couleur_fond = 0
-        self.etat = "titre" #etat de l'écran
-        self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calcules
+        self.couleur_fond = 0 #couleur du fond, noir au début
+        self.etat = "titre" #le stade de l'histoire
+        self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         pyxel.run(self.update, self.draw)
-        pyxel.show() #si on appuie sur la touche echap la fenêtre se ferme
+        pyxel.show() #si on appuie sur la touche échap la fenêtre se ferme
 
 
     def update(self):
 
         if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
+
             if self.etat == "titre" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le titre
                 self.etat = "texte"
                 self.couleur_fond = 0
-                self.apparition_souris()
                 self.temps = pyxel.frame_count
+
             elif self.etat == "texte" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le texte
                 self.couleur_fond = 0
                 self.etat = "chateau"
+                self.temps = pyxel.frame_count
+
+            elif self.etat == "chateau" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le chateau
+                self.couleur_fond = 0
+                self.etat = "entrer dans le chateau"
+                self.temps = pyxel.frame_count
+                self.souris(True)
+
 
 
 
@@ -31,13 +40,42 @@ class App:
         if self.etat == "titre": #afficher l'image avec le titre
             self.cadre()
             self.titre()
-        if self.etat == "texte":
+        elif self.etat == "texte":
             self.texte()
-        if self.etat == "chateau": #afficher l'image avec le chateau
+        elif self.etat == "chateau": #afficher l'image avec le chateau
             self.chateau()
+        elif self.etat == "entrer dans le chateau":
+            self.entrer_chateau()
+
+
+
+
+    def entrer_chateau(self):
+        pyxel.blt(0, 90, 2, 0, 0, 20, 21, 0) #le panneau
+        pyxel.line(0, 110, 240, 110, 3) #la ligne d'herbe
+
+        for y in range(111, 141): #le chemin
+            pyxel.line(0, y, 240, y, 13)
+
+        for x in [30, 70, 108, 156]: #les tronc d'arbres
+            for y in range(65, 110):
+                pyxel.line(x, y, x+9, y , 4)
+
+            #les brins d'herbes
+            pyxel.blt(x - 2, 108, 2, 24, 1, 3, 2, 0)
+            pyxel.blt(x + 9, 108, 2, 28, 0, 2, 3, 0)
+            pyxel.blt(x - 15, 50, 2, 0, 25, 38, 50, 0)
+
+
+
+
+
+
+
+
 
     def cadre(self):
-        """La fonction dessine le cadre."""
+        """La fonction dessine un cadre."""
         for x in range(pyxel.width):
             for y in range(pyxel.height):
                 if x <= 2 or x >= pyxel.width-3 or y <= 2 or y >= pyxel.height-3:
@@ -48,7 +86,7 @@ class App:
         pyxel.blt(222, 2, 0, 0, 16, -16, -16, 0) #coin haut droit
 
     def titre(self):
-        """écrit le titre du projet"""
+        """La fonction écrit le titre du projet."""
         pyxel.blt(91, 57, 0, 16, 0, 6, 8, 0) #P
         pyxel.blt(98, 57, 0, 24, 0, 8, 8, 0) #H
         pyxel.blt(107, 57, 0, 32, 0, 8, 8, 0) #A
@@ -65,12 +103,13 @@ class App:
         pyxel.blt(136, 67, 0, 44, 8, 6, 8, 0) #E
 
     def chateau(self):
+        """La fonction dessine le chateau."""
         pyxel.blt(50, 70, 1, 0, 0, 25, 70, 0)
         pyxel.blt(164, 70, 1, 0, 0, 25, 70, 0)
         pyxel.blt(75, 40, 1, 32, 0, 90, 101, 0)
 
     def texte(self):
-        self.couleur_fond = 0
+        """La fonction écrit le texte d'intro."""
         pyxel.blt(44, 40, 0, 50, 8, 3, 8, 0)#I
         pyxel.blt(48, 40, 0, 16, 16, 2, 8, 0)#l
 
@@ -232,8 +271,9 @@ class App:
         pyxel.blt(134, 91, 0, 69, 20, 1, 1, 0)#.
 
 
-    def apparition_souris(self):
-        pyxel.mouse(True)
+    def souris(self, etat):
+        """La fonction fait apparaitre ou disparaitre la souris"""
+        pyxel.mouse(etat)
 App()
 
 

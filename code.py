@@ -3,11 +3,14 @@ import random
 
 class App:
     def __init__(self):
-        pyxel.init(240, 140, title="phantom castle", fps=60)
+        pyxel.init(240, 140, title="phantom castle", fps=40)
         pyxel.load("images.pyxres")
         self.couleur_fond = 0 #couleur du fond, noir au début
         self.etat = "titre" #le stade de l'histoire
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
+        self.coordonnee_perso = [0, 95] #coordonnées du personnage
+        self.vitesse_perso = 1
+
         pyxel.run(self.update, self.draw)
         pyxel.show() #si on appuie sur la touche échap la fenêtre se ferme
 
@@ -32,6 +35,14 @@ class App:
                 self.temps = pyxel.frame_count
                 self.souris(True)
 
+        if pyxel.btn(pyxel.KEY_LEFT) and self.coordonnee_perso[0] > 0:
+            self.coordonnee_perso[0] = self.coordonnee_perso[0] - self.vitesse_perso
+
+        if pyxel.btn(pyxel.KEY_RIGHT):
+            self.coordonnee_perso[0] = self.coordonnee_perso[0] + self.vitesse_perso
+
+        if self.coordonnee_perso[0] > 240:
+            self.etat = "dans le chateau"
 
 
 
@@ -45,7 +56,11 @@ class App:
         elif self.etat == "chateau": #afficher l'image avec le chateau
             self.chateau()
         elif self.etat == "entrer dans le chateau":
+            self.couleur_fond = 1
             self.entrer_chateau()
+            pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
+        elif self.etat == "dans le chateau":
+            self.couleur_fond = 8
 
 
 
@@ -65,6 +80,9 @@ class App:
             pyxel.blt(x - 2, 108, 2, 24, 1, 3, 2, 0)
             pyxel.blt(x + 9, 108, 2, 28, 0, 2, 3, 0)
             pyxel.blt(x - 15, 50, 2, 0, 25, 38, 50, 0)
+            for y in [90, 75, 60, 45, 30, 15, 0]:
+                pyxel.blt(224, y, 1, 0, 41, 16, 15, 0)
+            pyxel.blt(224, 105, 1, 0, 41, 16, 6, 0)
 
 
 

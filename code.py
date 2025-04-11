@@ -3,64 +3,92 @@ import random
 
 class App:
     def __init__(self):
-        pyxel.init(240, 140, title="phantom castle", fps=40)
+        pyxel.init(240, 140, title="phantom castle", fps=40, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load("images.pyxres")
         self.couleur_fond = 0 #couleur du fond, noir au début
         self.etat = "titre" #le stade de l'histoire
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [0, 95] #coordonnées du personnage
-        self.vitesse_perso = 1
+        self.vitesse_perso = 6
 
         pyxel.run(self.update, self.draw)
-        pyxel.show() #si on appuie sur la touche échap la fenêtre se ferme
 
 
     def update(self):
 
-        if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
+        """if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
 
             if self.etat == "titre" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le titre
                 self.etat = "texte"
-                self.couleur_fond = 0
+                pyxel.cls(0)
+                #self.couleur_fond = 0
                 self.temps = pyxel.frame_count
 
             elif self.etat == "texte" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le texte
-                self.couleur_fond = 0
+                #self.couleur_fond = 0
+                pyxel.cls(0)
                 self.etat = "chateau"
                 self.temps = pyxel.frame_count
 
             elif self.etat == "chateau" and pyxel.frame_count - self.temps > 10: #nettoyer l'écran aprés le chateau
-                self.couleur_fond = 0
+                #self.couleur_fond = 0
+                pyxel.cls(0)
                 self.etat = "entrer dans le chateau"
                 self.temps = pyxel.frame_count
                 self.souris(True)
+        if self.etat == "entrer dans le chateau":
+            if pyxel.btn(pyxel.KEY_LEFT) and self.coordonnee_perso[0] > 0:
+                self.coordonnee_perso[0] = self.coordonnee_perso[0] - self.vitesse_perso
 
-        if pyxel.btn(pyxel.KEY_LEFT) and self.coordonnee_perso[0] > 0:
-            self.coordonnee_perso[0] = self.coordonnee_perso[0] - self.vitesse_perso
+            if pyxel.btn(pyxel.KEY_RIGHT):
+                self.coordonnee_perso[0] = self.coordonnee_perso[0] + self.vitesse_perso
 
-        if pyxel.btn(pyxel.KEY_RIGHT):
-            self.coordonnee_perso[0] = self.coordonnee_perso[0] + self.vitesse_perso
-
-        if self.coordonnee_perso[0] > 240:
-            self.etat = "dans le chateau"
+            if self.coordonnee_perso[0] > 240:
+                self.temps = pyxel.frame_count
+                self.etat = "dans le chateau"
+"""
+        self.etat = "dans le chateau"
 
 
 
     def draw(self):
-        pyxel.cls(self.couleur_fond)
+
+        #pyxel.cls(self.couleur_fond)
         if self.etat == "titre": #afficher l'image avec le titre
             self.cadre()
             self.titre()
         elif self.etat == "texte":
+            self.cadre()
             self.texte()
         elif self.etat == "chateau": #afficher l'image avec le chateau
             self.chateau()
         elif self.etat == "entrer dans le chateau":
-            self.couleur_fond = 1
+            #self.couleur_fond = 1
+            pyxel.cls(1)
             self.entrer_chateau()
             pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
         elif self.etat == "dans le chateau":
-            self.couleur_fond = 8
+            pyxel.cls(0)
+            self.ouverture_grille(self.temps)
+
+
+    def ouverture_grille(self, temps):
+        if pyxel.frame_count == temps:
+            pyxel.blt(0, 0, 1, 0, 80, 16, 16)
+
+        if pyxel.frame_count < temps + 500:
+            pyxel.line(70, 140, 70, 70, 1)
+            pyxel.line(170, 140, 170, 70, 1)
+            pyxel.elli(71, 35, 99, 75,  1)
+            pyxel.fill(100, 125, 1)
+
+        elif pyxel.frame_count < temps+220:
+            #self.couleur_fond = 14
+            pyxel.cls(14)
+        elif pyxel.frame_count == temps+330:
+            #self.couleur_fond = 5
+            pyxel.cls(5)
+
 
 
 
@@ -293,7 +321,6 @@ class App:
         """La fonction fait apparaitre ou disparaitre la souris"""
         pyxel.mouse(etat)
 App()
-
 
 
 

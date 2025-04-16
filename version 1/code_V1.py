@@ -4,7 +4,7 @@ class App:
 
     def __init__(self):
         pyxel.init(240, 140, title="phantom castle", fps=40, quit_key=pyxel.KEY_ESCAPE)
-        pyxel.load("images.pyxres") #charger l'image
+        pyxel.load("images_V1.pyxres") #charger l'image
         self.couleur_fond = 0 #couleur du fond, noir au début
         self.etat = "titre" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
@@ -15,7 +15,7 @@ class App:
 
 
     def update(self):
-        """if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
+        if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
 
             if self.etat == "titre" and pyxel.frame_count - self.temps > 10: #changer l'écran aprés le titre
                 self.etat = "texte"
@@ -43,8 +43,6 @@ class App:
             if self.coordonnee_perso[0] > 239: #si le personnage sort à droite, on change l'image
                 self.temps = pyxel.frame_count
                 self.etat = "dans le chateau"
-"""
-        self.etat = "dans le chateau"
 
 
 
@@ -63,29 +61,6 @@ class App:
             pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
         elif self.etat == "dans le chateau": #affichera l'interieur du chateau
             pyxel.cls(0)
-            self.ouverture_grille(self.temps)
-
-
-    def ouverture_grille(self, temps):
-        #pyxel.blt(0, 0, 1, 0, 80, 16, 16)
-        pyxel.bltm(0, 0, 0, 0, 0, 120, 140)
-        pyxel.bltm(119, 0, 0, 0, 0, -121, 140)
-        if pyxel.frame_count < temps + 500:
-            pyxel.line(70, 140, 70, 70, 0) #ligne gauche
-            pyxel.line(169, 140, 169, 70, 0) #ligne droite
-            pyxel.elli(71, 35, 98, 75,  0) #
-            pyxel.fill(120, 125, 0) #remplire
-
-            pyxel.line(121, 140, 121, 35, 7)
-            pyxel.line(120, 140, 120, 35, 7)
-            pyxel.line(119, 140, 119, 35, 7)
-
-            pyxel.line(128, 140, 128, 36, 7)
-            pyxel.line(127, 140, 127, 35, 7)
-            pyxel.line(126, 140, 126, 35, 7)
-
-
-
 
 
 
@@ -312,21 +287,3 @@ class App:
         """La fonction fait apparaitre ou disparaitre la souris"""
         pyxel.mouse(etat)
 App()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

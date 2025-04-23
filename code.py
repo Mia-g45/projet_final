@@ -15,7 +15,7 @@ class App:
 
 
     def update(self):
-        """if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
+        if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
 
             if self.etat == "titre" and pyxel.frame_count - self.temps > 10: #changer l'écran aprés le titre
                 self.etat = "texte"
@@ -43,8 +43,10 @@ class App:
             if self.coordonnee_perso[0] > 239: #si le personnage sort à droite, on change l'image
                 self.temps = pyxel.frame_count
                 self.etat = "dans le chateau"
-"""
-        self.etat = "dans le chateau"
+
+        if self.etat == "jeu":
+            pyxel.cls(0)
+
 
 
 
@@ -70,19 +72,90 @@ class App:
         #pyxel.blt(0, 0, 1, 0, 80, 16, 16)
         pyxel.bltm(0, 0, 0, 0, 0, 120, 140)
         pyxel.bltm(119, 0, 0, 0, 0, -121, 140)
-        if pyxel.frame_count < temps + 500:
-            pyxel.line(70, 140, 70, 70, 0) #ligne gauche
-            pyxel.line(169, 140, 169, 70, 0) #ligne droite
-            pyxel.elli(71, 35, 98, 75,  0) #
-            pyxel.fill(120, 125, 0) #remplire
 
-            pyxel.line(121, 140, 121, 35, 7)
-            pyxel.line(120, 140, 120, 35, 7)
-            pyxel.line(119, 140, 119, 35, 7)
+        pyxel.line(70, 140, 70, 70, 0) #ligne gauche
+        pyxel.line(169, 140, 169, 70, 0) #ligne droite
+        pyxel.elli(71, 35, 98, 75,  0) #
+        pyxel.fill(120, 125, 0) #remplire
 
-            pyxel.line(128, 140, 128, 36, 7)
-            pyxel.line(127, 140, 127, 35, 7)
-            pyxel.line(126, 140, 126, 35, 7)
+        x = 140
+
+        if pyxel.frame_count < temps + 10:
+            x = 140
+        elif pyxel.frame_count < temps + 20:
+            x = 130
+        elif pyxel.frame_count < temps + 30:
+            x = 120
+        elif pyxel.frame_count < temps + 40:
+            x = 110
+        elif pyxel.frame_count < temps + 50:
+            x = 100
+        elif pyxel.frame_count < temps + 60:
+            x = 90
+        elif pyxel.frame_count < temps + 70:
+            x = 80
+        else:
+            self.etat = "jeu"
+        if self.etat != "jeu":
+
+            pyxel.line(73, x - 1, 73, 61, 7)
+            pyxel.line(74, x, 74, 59, 7)
+            pyxel.line(75, x - 1, 75, 57, 7)
+
+            pyxel.line(80, x - 1, 80, 50, 7)
+            pyxel.line(81, x, 81, 49, 7)
+            pyxel.line(82, x - 1, 82, 49, 7)
+
+            pyxel.line(87, x - 1, 87, 45, 7)
+            pyxel.line(88, x, 88, 44, 7)
+            pyxel.line(89, x - 1, 89, 43, 7)
+
+            pyxel.line(94, x - 1, 94, 41, 7)
+            pyxel.line(95, x, 95, 40, 7)
+            pyxel.line(96, x - 1, 96, 40, 7)
+
+            pyxel.line(101, x - 1, 101, 38, 7)
+            pyxel.line(102, x, 102, 37, 7)
+            pyxel.line(103, x - 1, 103, 37, 7)
+
+            pyxel.line(108, x - 1, 108, 36, 7)
+            pyxel.line(109, x, 109, 36, 7)
+            pyxel.line(110, x - 1, 110, 36, 7)
+
+            pyxel.line(115, x - 1, 115, 35, 7)
+            pyxel.line(116, x, 116, 35, 7)
+            pyxel.line(117, x - 1, 117, 35, 7)
+
+
+            pyxel.line(122, x - 1, 122, 35, 7)
+            pyxel.line(123, x, 123, 35, 7)
+            pyxel.line(124, x - 1, 124, 35, 7)
+
+            pyxel.line(129, x - 1, 129, 36, 7)
+            pyxel.line(130, x, 130, 36, 7)
+            pyxel.line(131, x - 1, 131, 36, 7)
+
+            pyxel.line(136, x - 1, 136, 37, 7)
+            pyxel.line(137, x, 137, 37, 7)
+            pyxel.line(138, x - 1, 138, 38, 7)
+
+            pyxel.line(143, x - 1, 143, 40, 7)
+            pyxel.line(144, x, 144, 40, 7)
+            pyxel.line(145, x - 1, 145, 41, 7)
+
+            pyxel.line(150, x - 1, 150, 43, 7)
+            pyxel.line(151, x, 151, 44, 7)
+            pyxel.line(152, x - 1, 152, 45, 7)
+
+            pyxel.line(157, x - 1, 157, 49, 7)
+            pyxel.line(158, x, 158, 49, 7)
+            pyxel.line(159, x - 1, 159, 50, 7)
+
+            pyxel.line(164, x - 1, 164, 57, 7)
+            pyxel.line(165, x, 165, 59, 7)
+            pyxel.line(166, x - 1, 166, 61, 7)
+
+
 
 
 

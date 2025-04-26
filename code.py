@@ -17,17 +17,17 @@ class App:
     def update(self):
         if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
 
-            if self.etat == "titre" and pyxel.frame_count - self.temps > 10: #changer l'écran aprés le titre
+            if self.etat == "titre" and pyxel.frame_count - self.temps > 10: #changer l'écran après le titre
                 self.etat = "texte"
                 pyxel.cls(0)
                 self.temps = pyxel.frame_count
 
-            elif self.etat == "texte" and pyxel.frame_count - self.temps > 10: #changer l'écran aprés le texte
+            elif self.etat == "texte" and pyxel.frame_count - self.temps > 10: #changer l'écran après le texte
                 pyxel.cls(0)
                 self.etat = "chateau"
                 self.temps = pyxel.frame_count
 
-            elif self.etat == "chateau" and pyxel.frame_count - self.temps > 10: #changer l'écran aprés le chateau
+            elif self.etat == "chateau" and pyxel.frame_count - self.temps > 10: #changer l'écran après le chateau
                 pyxel.cls(0)
                 self.etat = "entrer dans le chateau"
                 self.temps = pyxel.frame_count
@@ -42,8 +42,9 @@ class App:
 
             if self.coordonnee_perso[0] > 239: #si le personnage sort à droite, on change l'image
                 self.temps = pyxel.frame_count
-                self.etat = "dans le chateau"
+                self.etat = "grille"
                 self.coordonnee_perso = [116, 117]
+
         if self.etat == "jeu":
             pyxel.cls(0)
 
@@ -63,26 +64,23 @@ class App:
             pyxel.cls(1)
             self.entrer_chateau()
             pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
-        elif self.etat == "dans le chateau": #affichera l'interieur du chateau
+        elif self.etat == "grille": #affiche la grille, on voit le personnage entrer dans le chateau
             pyxel.cls(0)
             self.ouverture_grille(self.temps)
 
 
 
     def ouverture_grille(self, temps):
-        #pyxel.blt(0, 0, 1, 0, 80, 16, 16)
-        pyxel.bltm(0, 0, 0, 0, 0, 120, 140)
-        pyxel.bltm(119, 0, 0, 0, 0, -121, 140)
+        pyxel.bltm(0, 0, 0, 0, 0, 120, 140) #mur de brique (partie gauche)
+        pyxel.bltm(119, 0, 0, 0, 0, -121, 140) #mur de brique (partie droite)
 
-        pyxel.line(70, 140, 70, 70, 0) #ligne gauche
-        pyxel.line(169, 140, 169, 70, 0) #ligne droite
-        pyxel.elli(71, 35, 98, 75,  0) #
-        pyxel.fill(120, 125, 0) #remplire
+        pyxel.line(70, 140, 70, 70, 0) #ligne gauche de l'encadrement de porte
+        pyxel.line(169, 140, 169, 70, 0) #ligne droite de l'encadrement de porte
+        pyxel.elli(71, 35, 98, 75,  0) #l'arrondi au dessus de l'encadrement de porte
 
-        x = 140
+        x = 140 #change de valeur pour donner l'impression que la grille s'ouvre et se ferme
         endroit = "dehors" #permet d'afficher le personnage devant ou derière la grille
         if pyxel.frame_count < temps + 10:
-
             x = 140
         elif pyxel.frame_count < temps + 20:
             x = 130
@@ -97,8 +95,8 @@ class App:
         elif pyxel.frame_count < temps + 70:
             x = 80
         elif pyxel.frame_count < temps + 80:
-            endroit = "dedans"
             x = 90
+            endroit = "dedans"
         elif pyxel.frame_count < temps + 90:
             x = 100
             endroit = "dedans"
@@ -114,76 +112,72 @@ class App:
         elif pyxel.frame_count < temps + 130:
             x = 140
             endroit = "dedans"
-
         else:
             self.etat = "jeu"
+
         if self.etat != "jeu":
-            if endroit == "dedans":
+            if endroit == "dedans": #afficher le personnage derrière la grille
                 pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
+
+            #dessiner tous les barreaux de la grille
+            #1
             pyxel.line(73, x - 1, 73, 61, 7)
             pyxel.line(74, x, 74, 59, 7)
             pyxel.line(75, x - 1, 75, 57, 7)
-
+            #2
             pyxel.line(80, x - 1, 80, 50, 7)
             pyxel.line(81, x, 81, 49, 7)
             pyxel.line(82, x - 1, 82, 49, 7)
-
+            #3
             pyxel.line(87, x - 1, 87, 45, 7)
             pyxel.line(88, x, 88, 44, 7)
             pyxel.line(89, x - 1, 89, 43, 7)
-
+            #4
             pyxel.line(94, x - 1, 94, 41, 7)
             pyxel.line(95, x, 95, 40, 7)
             pyxel.line(96, x - 1, 96, 40, 7)
-
+            #5
             pyxel.line(101, x - 1, 101, 38, 7)
             pyxel.line(102, x, 102, 37, 7)
             pyxel.line(103, x - 1, 103, 37, 7)
-
+            #6
             pyxel.line(108, x - 1, 108, 36, 7)
             pyxel.line(109, x, 109, 36, 7)
             pyxel.line(110, x - 1, 110, 36, 7)
-
+            #7
             pyxel.line(115, x - 1, 115, 35, 7)
             pyxel.line(116, x, 116, 35, 7)
             pyxel.line(117, x - 1, 117, 35, 7)
-
-
+            #8
             pyxel.line(122, x - 1, 122, 35, 7)
             pyxel.line(123, x, 123, 35, 7)
             pyxel.line(124, x - 1, 124, 35, 7)
-
+            #9
             pyxel.line(129, x - 1, 129, 36, 7)
             pyxel.line(130, x, 130, 36, 7)
             pyxel.line(131, x - 1, 131, 36, 7)
-
+            #10
             pyxel.line(136, x - 1, 136, 37, 7)
             pyxel.line(137, x, 137, 37, 7)
             pyxel.line(138, x - 1, 138, 38, 7)
-
+            #11
             pyxel.line(143, x - 1, 143, 40, 7)
             pyxel.line(144, x, 144, 40, 7)
             pyxel.line(145, x - 1, 145, 41, 7)
-
+            #12
             pyxel.line(150, x - 1, 150, 43, 7)
             pyxel.line(151, x, 151, 44, 7)
             pyxel.line(152, x - 1, 152, 45, 7)
-
+            #13
             pyxel.line(157, x - 1, 157, 49, 7)
             pyxel.line(158, x, 158, 49, 7)
             pyxel.line(159, x - 1, 159, 50, 7)
-
+            #14
             pyxel.line(164, x - 1, 164, 57, 7)
             pyxel.line(165, x, 165, 59, 7)
             pyxel.line(166, x - 1, 166, 61, 7)
-            if endroit == "dehors":
+            if endroit == "dehors": #permet d'afficher le personnage devant la grille
                 pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
-
-
-
-
-
-
 
 
     def entrer_chateau(self):

@@ -9,7 +9,7 @@ class App:
         self.etat = "titre" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [0, 95] #coordonnées du personnage
-        self.vitesse_perso = 1 #vitesse du personnage
+        self.vitesse_perso = 5 #vitesse du personnage
 
         pyxel.run(self.update, self.draw)
 
@@ -43,7 +43,7 @@ class App:
             if self.coordonnee_perso[0] > 239: #si le personnage sort à droite, on change l'image
                 self.temps = pyxel.frame_count
                 self.etat = "dans le chateau"
-
+                self.coordonnee_perso = [116, 117]
         if self.etat == "jeu":
             pyxel.cls(0)
 
@@ -68,6 +68,7 @@ class App:
             self.ouverture_grille(self.temps)
 
 
+
     def ouverture_grille(self, temps):
         #pyxel.blt(0, 0, 1, 0, 80, 16, 16)
         pyxel.bltm(0, 0, 0, 0, 0, 120, 140)
@@ -79,8 +80,9 @@ class App:
         pyxel.fill(120, 125, 0) #remplire
 
         x = 140
-
+        endroit = "dehors" #permet d'afficher le personnage devant ou derière la grille
         if pyxel.frame_count < temps + 10:
+
             x = 140
         elif pyxel.frame_count < temps + 20:
             x = 130
@@ -94,10 +96,30 @@ class App:
             x = 90
         elif pyxel.frame_count < temps + 70:
             x = 80
+        elif pyxel.frame_count < temps + 80:
+            endroit = "dedans"
+            x = 90
+        elif pyxel.frame_count < temps + 90:
+            x = 100
+            endroit = "dedans"
+        elif pyxel.frame_count < temps + 100:
+            x = 110
+            endroit = "dedans"
+        elif pyxel.frame_count < temps + 110:
+            x = 120
+            endroit = "dedans"
+        elif pyxel.frame_count < temps + 120:
+            x = 130
+            endroit = "dedans"
+        elif pyxel.frame_count < temps + 130:
+            x = 140
+            endroit = "dedans"
+
         else:
             self.etat = "jeu"
         if self.etat != "jeu":
-
+            if endroit == "dedans":
+                pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
             pyxel.line(73, x - 1, 73, 61, 7)
             pyxel.line(74, x, 74, 59, 7)
             pyxel.line(75, x - 1, 75, 57, 7)
@@ -154,6 +176,8 @@ class App:
             pyxel.line(164, x - 1, 164, 57, 7)
             pyxel.line(165, x, 165, 59, 7)
             pyxel.line(166, x - 1, 166, 61, 7)
+            if endroit == "dehors":
+                pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
 
 
 

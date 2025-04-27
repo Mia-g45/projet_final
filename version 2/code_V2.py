@@ -4,12 +4,12 @@ class App:
 
     def __init__(self):
         pyxel.init(240, 140, title="phantom castle", fps=40, quit_key=pyxel.KEY_ESCAPE)
-        pyxel.load("images.pyxres") #charger l'image
+        pyxel.load("images_V2.pyxres") #charger l'image
         self.couleur_fond = 0 #couleur du fond, noir au début
         self.etat = "titre" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [0, 95] #coordonnées du personnage
-        self.vitesse_perso = 5 #vitesse du personnage
+        self.vitesse_perso = 1 #vitesse du personnage
 
         pyxel.run(self.update, self.draw)
 
@@ -32,25 +32,20 @@ class App:
                 self.etat = "entrer dans le chateau"
                 self.temps = pyxel.frame_count
                 self.souris(True)
-            elif self.etat == "prison" and pyxel.frame_count - self.temps > 10: #changer l'écran après la grille
-                pyxel.cls(6)
-                self.etat = "couloir"
-                self.temps = pyxel.frame_count
 
-        if self.etat == "entrer dans le chateau" or self.etat == "couloir":
+        if self.etat == "entrer dans le chateau":
             if pyxel.btn(pyxel.KEY_LEFT) and self.coordonnee_perso[0] > 0: #le personnage va à gauche, mais ne peut pas sortir de la fenêtre d'affichage
                 self.coordonnee_perso[0] = self.coordonnee_perso[0] - self.vitesse_perso
 
-            if pyxel.btn(pyxel.KEY_RIGHT) and self.coordonnee_perso[0] < 235: #le personnage va à droite
+            if pyxel.btn(pyxel.KEY_RIGHT): #le personnage va à droite
                 self.coordonnee_perso[0] = self.coordonnee_perso[0] + self.vitesse_perso
 
-            if self.coordonnee_perso[0] >= 235: #si le personnage sort à droite, on change l'image
+            if self.coordonnee_perso[0] > 239: #si le personnage sort à droite, on change l'image
                 self.temps = pyxel.frame_count
-                if self.etat == "entrer dans le chateau":
-                    self.etat = "grille"
+                self.etat = "grille"
+                self.coordonnee_perso = [116, 117]
 
-        if self.etat == "prison":
-            self.coordonnee_perso = [230, 118]
+        if self.etat == "jeu":
             pyxel.cls(0)
 
 
@@ -72,27 +67,7 @@ class App:
         elif self.etat == "grille": #affiche la grille, on voit le personnage entrer dans le chateau
             pyxel.cls(0)
             self.ouverture_grille(self.temps)
-        elif self.etat == "couloir":
-            self.couloir()
-            pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
 
-
-    def couloir(self):
-        pyxel.bltm(0, 0, 0, 0, 0, 64, 128, 0)
-        pyxel.bltm(64, 0, 0, 0, 0, 64, 128, 0)
-        pyxel.bltm(128, 0, 0, 0, 0, 64, 128, 0)
-        pyxel.bltm(192, 0, 0, 0, 0, 48, 128, 0)
-        pyxel.bltm(0, 128, 0, 0, 0, 64, 12, 0)
-        pyxel.bltm(64, 128, 0, 0, 0, 64, 12, 0)
-        pyxel.bltm(128, 128, 0, 0, 0, 64, 12, 0)
-        pyxel.bltm(192, 128, 0, 0, 0, 48, 12, 0)
-        pyxel.blt(10, 79, 1, 0, 112, 32, 64, 0)#porte 1
-        pyxel.blt(52, 79, 1, 0, 112, 32, 64, 0)#porte 2
-        pyxel.blt(94, 79, 1, 0, 112, 32, 64, 0)#porte 3
-        pyxel.blt(22, 94, 0, 18, 35, 2, 5, 0)#1
-        pyxel.blt(26, 94, 0, 21, 35, 4, 5, 0)#8
-        pyxel.blt(66, 94, 0, 26, 35, 4, 5, 0)#6
-        pyxel.blt(108, 94, 0, 21, 35, 4, 5, 0)#8
 
 
     def ouverture_grille(self, temps):
@@ -138,10 +113,11 @@ class App:
             x = 140
             endroit = "dedans"
         else:
-            self.etat = "prison"
-        if self.etat != "prison":
+            self.etat = "jeu"
+
+        if self.etat != "jeu":
             if endroit == "dedans": #afficher le personnage derrière la grille
-                pyxel.blt(116, 117, 0, 0, 33, 9, 23, 8)
+                pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
 
             #dessiner tous les barreaux de la grille
             #1
@@ -201,7 +177,7 @@ class App:
             pyxel.line(165, x, 165, 59, 7)
             pyxel.line(166, x - 1, 166, 61, 7)
             if endroit == "dehors": #permet d'afficher le personnage devant la grille
-                pyxel.blt(116, 117, 0, 0, 33, 9, 23, 8)
+                pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
 
 
     def entrer_chateau(self):

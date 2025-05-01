@@ -6,11 +6,11 @@ class App:
         pyxel.init(240, 140, title="phantom castle", fps=40, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load("images.pyxres") #charger l'image
         self.couleur_fond = 0 #couleur du fond, noir au début
-        self.etat = "prison" #le stade du jeu
+        self.etat = "labyrinthe" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [0, 95] #coordonnées du personnage
         self.vitesse_perso = 5 #vitesse du personnage
-        self.t_labyrinthe = [[(0,20),1,2,1,(0,16),1], [(0,20),1,2,1,(0,16),1], [2,(1,13),(0,5),1,2,1,2,(1,8),2,(1,5),2,(1,3),], [2, 1,(0,8),1,2,1,2,(1,4),2,1,2,(1,3),(0,16),1], [2,1,(0,8),1,2,1,2,1,(0,5),1,(0,4),1,(0,16),1], [2,1,2,(1,4),2,1,2,1,2,1,(0,5),1,(0,4),(1,3),2,(1,5),2,(1,6)], [2,1,2,1,2,1,2,1,2,1,2,1,2,(1,6),2,1,(0,8),1,2,1,2,1], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,(0,8),1,2,1,2,1,2,(1,2)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,2,(1,4),2,1,2,1,2,1], [(1,3),2,1,(0,5),1,2,(1,6),2,1,2,(1,4),2,1,(0,5),1,2,1,2,1], [(0,5),1,(0,5),1,(0,7),1,2,1,(0,8),1,(0,5),(1,4),2,(1,3)], [(0,5),1,2,1,2,1,(0,7),1,2,1,(0,8),1,2,1,2,1,(0,7),1], [2,1,2,1,2,1,2,1,2,(1,6),2,1,2,(1,4),2,1,2,1,2,1,(0,7),1], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,2,(1,4),2,(1,3),2,1], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,(0,8),(1,3),2,1], [(1,3),2,1,2,1,2,(1,3),2,1,2,(1,4),2,1,2,(1,4),(0,8),(1,3),2,1], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,2,(1,15),2,1], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,(0,16),1,2,1], [2,(1,7),2,1,2,(1,3),2,(1,7),(0,16),1,2,1], [2,1,(0,8),1,(0,17),(1,14),2,1], [2,1,(0,8),1,(0,17),1,(0,15),1], [2,1,2,(1,9),2,(1,8),2,(1,4),(0,15),1], [2,1,(0,10),1,2,1,(0,9),1,2,1,2,(1,14)], [2,1,(0,10),1,2,1,(0,9),1,2,1,(0,15),1], [2,(1,6),2,1,2,1,2,1,2,(1,5),2,1,2,1,(0,15),1], [2,1,(0,7),1,2,1,2,1,2,(1,5),2,1,2,1,2,(1,8),2,1,2,1], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1]]
+        self.t_labyrinthe = [[(0,20),1,2,1,(0,16),1,(0,7)], [(0,20),1,2,1,(0,16),1,(0,7)], [2,(1,13),(0,5),1,2,1,2,(1,8),2,(1,5),2,(1,2),(0,3)], [2, 1,(0,8),1,2,1,2,(1,4),2,1,2,(1,3),(0,15),1,(0,3)], [2,1,(0,8),1,2,1,2,1,(0,5),1,(0,4),1,(0,15),1,(0,3)], [2,1,2,(1,4),2,1,2,1,2,1,(0,5),1,(0,4),(1,3),2,(1,5),2,(1,5),(0,3)], [2,1,2,1,2,1,2,1,2,1,2,1,2,(1,6),2,1,(0,8),1,2,1,2,1,(0,4)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,(0,8),1,2,1,2,1,2,(1,2)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,2,(1,4),2,1,2,1,2,1,(0,4)], [(1,3),2,1,(0,5),1,2,(1,6),2,1,2,(1,4),2,1,(0,5),1,2,1,2,1,(0,4)], [(0,5),1,(0,5),1,(0,7),1,2,1,(0,8),1,(0,5),(1,4),2,(1,3),(0,2)], [(0,5),1,2,1,2,1,(0,7),1,2,1,(0,8),1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,2,(1,6),2,1,2,(1,4),2,1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,2,(1,4),2,(1,3),2,1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,(0,8),(1,3),2,1,(0,2)], [(1,3),2,1,2,1,2,(1,3),2,1,2,(1,4),2,1,2,(1,4),(0,8),(1,3),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,2,(1,15),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,(0,16),1,2,1,(0,2)], [2,(1,7),2,1,2,(1,3),2,(1,7),(0,16),1,2,1,(0,2)], [2,1,(0,8),1,(0,17),(1,14),2,1,(0,2)], [2,1,(0,8),1,(0,17),1,(0,15),1,(0,2)], [2,1,2,(1,9),2,(1,8),2,(1,4),(0,15),1,(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,2,(1,14),(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,(0,15),1,(0,2)], [2,(1,6),2,1,2,1,2,1,2,(1,5),2,1,2,1,(0,15),1,(0,2)], [2,1,(0,7),1,2,1,2,1,2,(1,5),2,1,2,1,2,(1,8),2,1,2,1,(0,2)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)]]
         self.tab_labyrinthe = []
         for ligne in self.t_labyrinthe:
             tab = []
@@ -24,6 +24,8 @@ class App:
                     for i in range(couple[1]):
                         tab.append(couple[0])
             self.tab_labyrinthe.append(tab)
+
+        self.perso_labyrinthe = [154, 135]
         pyxel.run(self.update, self.draw)
 
 
@@ -70,6 +72,39 @@ class App:
             if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 95 and self.coordonnee_perso[0] < 120:
                 self.etat = "labyrinthe"
 
+        if self.etat == "labyrinthe":
+            if pyxel.btn(pyxel.KEY_LEFT) and self.perso_labyrinthe[0] > 3: #gauche
+                if self.tab_labyrinthe[self.perso_labyrinthe[1]//5][(self.perso_labyrinthe[0]-4)//5] == 1:
+                    self.perso_labyrinthe[0] = self.perso_labyrinthe[0]
+                else:
+                    self.perso_labyrinthe[0] = self.perso_labyrinthe[0] - 1
+
+            if pyxel.btn(pyxel.KEY_RIGHT) and self.perso_labyrinthe[0] < 236: #droite
+                if self.tab_labyrinthe[self.perso_labyrinthe[1]//5][(self.perso_labyrinthe[0]+4)//5] == 1 or self.tab_labyrinthe[(self.perso_labyrinthe[1]-4)//5][self.perso_labyrinthe[0]//5] == 1 or self.tab_labyrinthe[(self.perso_labyrinthe[1]+4)//5][self.perso_labyrinthe[0]//5] == 1:
+                    self.perso_labyrinthe[0] = self.perso_labyrinthe[0]
+                else:
+                    self.perso_labyrinthe[0] = self.perso_labyrinthe[0] + 1
+
+            if pyxel.btn(pyxel.KEY_UP) and self.perso_labyrinthe[1] > 3: #haut
+                if self.tab_labyrinthe[(self.perso_labyrinthe[1]-4)//5][self.perso_labyrinthe[0]//5] == 1:
+                    self.perso_labyrinthe[1] = self.perso_labyrinthe[1]
+                else:
+                    self.perso_labyrinthe[1] = self.perso_labyrinthe[1] - 1
+
+            if pyxel.btn(pyxel.KEY_DOWN) and self.perso_labyrinthe[1] < 136: #bas
+                if self.tab_labyrinthe[(self.perso_labyrinthe[1]+4)//5][self.perso_labyrinthe[0]//5] == 1:
+                    self.perso_labyrinthe[1] = self.perso_labyrinthe[1]
+                else:
+                    self.perso_labyrinthe[1] = self.perso_labyrinthe[1] + 1
+
+            if self.perso_labyrinthe[1] >= 3 and self.perso_labyrinthe[1] < 9 and self.perso_labyrinthe[0] > 105 and self.perso_labyrinthe[0] < 111:
+                self.etat = "mort1"
+
+            if self.perso_labyrinthe[1] > 131 and self.perso_labyrinthe[1] < 137 and self.perso_labyrinthe[0] >= 3 and self.perso_labyrinthe[0] < 9:
+                self.etat = "couloir"
+
+        if self.etat == "mort1":
+            pyxel.cls(9)
 
 
 
@@ -104,6 +139,7 @@ class App:
             for i_colonne in range(len(self.tab_labyrinthe[i_ligne])):
                 if self.tab_labyrinthe[i_ligne][i_colonne] == 1:
                     pyxel.blt(i_colonne*5, i_ligne*5, 1, 40, 112, 5, 5, 0)
+        pyxel.circ(self.perso_labyrinthe[0], self.perso_labyrinthe[1], 3, 8)
 
 
     def couloir(self):

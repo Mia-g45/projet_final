@@ -6,11 +6,13 @@ class App:
         pyxel.init(240, 140, title="phantom castle", fps=40, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load("images.pyxres") #charger l'image
         self.couleur_fond = 0 #couleur du fond, noir au début
-        self.etat = "labyrinthe" #le stade du jeu
+        self.etat = "titre" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [0, 95] #coordonnées du personnage
-        self.vitesse_perso = 5 #vitesse du personnage
+        self.vitesse_perso = 1 #vitesse du personnage
+        #tableau représentant l'etat du labyrinthe, coupé en une grille de bloc de 5 par 5, chaque couple  ((0 : pas de bloc, 1 : un bloc), nombre de bloc d'affiler avec cet etat), 1 représente le couple (1, 1), 2 représente le couple (0, 2)
         self.t_labyrinthe = [[(0,20),1,2,1,(0,16),1,(0,7)], [(0,20),1,2,1,(0,16),1,(0,7)], [2,(1,13),(0,5),1,2,1,2,(1,8),2,(1,5),2,(1,2),(0,3)], [2, 1,(0,8),1,2,1,2,(1,4),2,1,2,(1,3),(0,15),1,(0,3)], [2,1,(0,8),1,2,1,2,1,(0,5),1,(0,4),1,(0,15),1,(0,3)], [2,1,2,(1,4),2,1,2,1,2,1,(0,5),1,(0,4),(1,3),2,(1,5),2,(1,5),(0,3)], [2,1,2,1,2,1,2,1,2,1,2,1,2,(1,6),2,1,(0,8),1,2,1,2,1,(0,4)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,(0,8),1,2,1,2,1,2,(1,2)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,2,(1,4),2,1,2,1,2,1,(0,4)], [(1,3),2,1,(0,5),1,2,(1,6),2,1,2,(1,4),2,1,(0,5),1,2,1,2,1,(0,4)], [(0,5),1,(0,5),1,(0,7),1,2,1,(0,8),1,(0,5),(1,4),2,(1,3),(0,2)], [(0,5),1,2,1,2,1,(0,7),1,2,1,(0,8),1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,2,(1,6),2,1,2,(1,4),2,1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,2,(1,4),2,(1,3),2,1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,(0,8),(1,3),2,1,(0,2)], [(1,3),2,1,2,1,2,(1,3),2,1,2,(1,4),2,1,2,(1,4),(0,8),(1,3),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,2,(1,15),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,(0,16),1,2,1,(0,2)], [2,(1,7),2,1,2,(1,3),2,(1,7),(0,16),1,2,1,(0,2)], [2,1,(0,8),1,(0,17),(1,14),2,1,(0,2)], [2,1,(0,8),1,(0,17),1,(0,15),1,(0,2)], [2,1,2,(1,9),2,(1,8),2,(1,4),(0,15),1,(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,2,(1,14),(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,(0,15),1,(0,2)], [2,(1,6),2,1,2,1,2,1,2,(1,5),2,1,2,1,(0,15),1,(0,2)], [2,1,(0,7),1,2,1,2,1,2,(1,5),2,1,2,1,2,(1,8),2,1,2,1,(0,2)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)]]
+        #construction du tableau avec tout les 0 et les 1
         self.tab_labyrinthe = []
         for ligne in self.t_labyrinthe:
             tab = []
@@ -25,7 +27,8 @@ class App:
                         tab.append(couple[0])
             self.tab_labyrinthe.append(tab)
 
-        self.perso_labyrinthe = [154, 135]
+        self.perso_labyrinthe = [154, 135]#les coordonnées du personnage dans le labyrinthe
+
         pyxel.run(self.update, self.draw)
 
 
@@ -52,14 +55,14 @@ class App:
                 self.etat = "couloir"
                 self.temps = pyxel.frame_count
 
-        if self.etat == "entrer dans le chateau" or self.etat == "couloir":
+        if self.etat == "entrer dans le chateau" or self.etat == "couloir": #pouvoir déplacer le personnage
             if pyxel.btn(pyxel.KEY_LEFT) and self.coordonnee_perso[0] > 0: #le personnage va à gauche, mais ne peut pas sortir de la fenêtre d'affichage
                 self.coordonnee_perso[0] = self.coordonnee_perso[0] - self.vitesse_perso
 
-            if pyxel.btn(pyxel.KEY_RIGHT) and self.coordonnee_perso[0] < 235: #le personnage va à droite
+            if pyxel.btn(pyxel.KEY_RIGHT) and self.coordonnee_perso[0] < 235: #le personnage va à droite, mais ne peut pas sortir de la fenêtre d'affichage
                 self.coordonnee_perso[0] = self.coordonnee_perso[0] + self.vitesse_perso
 
-            if self.coordonnee_perso[0] >= 235: #si le personnage sort à droite, on change l'image
+            if self.coordonnee_perso[0] >= 235: #si le personnage 'sort' à droite, on change l'image
                 self.temps = pyxel.frame_count
                 if self.etat == "entrer dans le chateau":
                     self.etat = "grille"
@@ -69,10 +72,10 @@ class App:
             pyxel.cls(0)
 
         if self.etat == "couloir":
-            if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 95 and self.coordonnee_perso[0] < 120:
+            if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 95 and self.coordonnee_perso[0] < 120: #si on appuie sur la touche entrée quand le personnage se trouve sur la porte avec le numéro 8, le personnage entre dans le labyrinthe
                 self.etat = "labyrinthe"
 
-        if self.etat == "labyrinthe":
+        if self.etat == "labyrinthe": #déplacer le personnage dans le labyrinthe
             if pyxel.btn(pyxel.KEY_LEFT) and self.perso_labyrinthe[0] > 3: #gauche
                 if self.tab_labyrinthe[self.perso_labyrinthe[1]//5][(self.perso_labyrinthe[0]-4)//5] == 1:
                     self.perso_labyrinthe[0] = self.perso_labyrinthe[0]
@@ -80,7 +83,7 @@ class App:
                     self.perso_labyrinthe[0] = self.perso_labyrinthe[0] - 1
 
             if pyxel.btn(pyxel.KEY_RIGHT) and self.perso_labyrinthe[0] < 236: #droite
-                if self.tab_labyrinthe[self.perso_labyrinthe[1]//5][(self.perso_labyrinthe[0]+4)//5] == 1 or self.tab_labyrinthe[(self.perso_labyrinthe[1]-4)//5][self.perso_labyrinthe[0]//5] == 1 or self.tab_labyrinthe[(self.perso_labyrinthe[1]+4)//5][self.perso_labyrinthe[0]//5] == 1:
+                if self.tab_labyrinthe[self.perso_labyrinthe[1]//5][(self.perso_labyrinthe[0]+4)//5] == 1 :
                     self.perso_labyrinthe[0] = self.perso_labyrinthe[0]
                 else:
                     self.perso_labyrinthe[0] = self.perso_labyrinthe[0] + 1
@@ -97,14 +100,13 @@ class App:
                 else:
                     self.perso_labyrinthe[1] = self.perso_labyrinthe[1] + 1
 
-            if self.perso_labyrinthe[1] >= 3 and self.perso_labyrinthe[1] < 9 and self.perso_labyrinthe[0] > 105 and self.perso_labyrinthe[0] < 111:
+            if self.perso_labyrinthe[1] < 9 and self.perso_labyrinthe[0] > 105 and self.perso_labyrinthe[0] < 112: #première sortie
                 self.etat = "mort1"
 
-            if self.perso_labyrinthe[1] > 131 and self.perso_labyrinthe[1] < 137 and self.perso_labyrinthe[0] >= 3 and self.perso_labyrinthe[0] < 9:
+            if self.perso_labyrinthe[1] > 131 and self.perso_labyrinthe[1] < 137 and self.perso_labyrinthe[0] < 9: #deuxième sortie
                 self.etat = "couloir"
 
-        if self.etat == "mort1":
-            pyxel.cls(9)
+
 
 
 
@@ -124,25 +126,42 @@ class App:
         elif self.etat == "grille": #affiche la grille, on voit le personnage entrer dans le chateau
             pyxel.cls(0)
             self.ouverture_grille(self.temps)
-        elif self.etat == "couloir":
+        elif self.etat == "prison": #affiche la prison (pas encore fini)
+            self.prison()
+        elif self.etat == "couloir": #affiche le couloir
             self.couloir()
             pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
-        elif self.etat == "labyrinthe":
+        elif self.etat == "labyrinthe": #affiche le labyrinthe
             self.labyrinthe()
+        elif self.etat == "mort1": #affiche la première mort possible
+            pyxel.cls(0)
+            pyxel.text(100, 60, "vous êtes mort !!!", 7)
+
+
+    def prison(self):
+        """Cette fonction dessine la prison."""
+        pyxel.blt(120, 117, 0, 0, 33, 9, 23, 8)
+        for x in range(6, 240, 15):
+            pyxel.line(x, 0, x, 140, 7)
+            pyxel.line(x+1, 0, x+1, 140, 7)
+            pyxel.line(x+2, 0, x+2, 140, 7)
 
 
 
     def labyrinthe(self):
+        """Cette fonction dessine le labyrinthe et permet au personnage de se déplacer."""
         pyxel.cls(13)
         for i_ligne in range(len(self.tab_labyrinthe)):
-
             for i_colonne in range(len(self.tab_labyrinthe[i_ligne])):
                 if self.tab_labyrinthe[i_ligne][i_colonne] == 1:
                     pyxel.blt(i_colonne*5, i_ligne*5, 1, 40, 112, 5, 5, 0)
+        pyxel.rect(105, 0, 10, 10, 0)
+        pyxel.rect(0, 130, 10, 10, 0)
         pyxel.circ(self.perso_labyrinthe[0], self.perso_labyrinthe[1], 3, 8)
 
 
     def couloir(self):
+        """Cette fonction dessine le couloir avec les trois porte."""
         pyxel.bltm(0, 0, 0, 0, 0, 64, 128, 0)
         pyxel.bltm(64, 0, 0, 0, 0, 64, 128, 0)
         pyxel.bltm(128, 0, 0, 0, 0, 64, 128, 0)
@@ -168,39 +187,39 @@ class App:
         pyxel.line(169, 140, 169, 70, 0) #ligne droite de l'encadrement de porte
         pyxel.elli(71, 35, 98, 75,  0) #l'arrondi au dessus de l'encadrement de porte
 
-        x = 140 #change de valeur pour donner l'impression que la grille s'ouvre et se ferme
+        y = 140 #change de valeur pour donner l'impression que la grille s'ouvre et se ferme
         endroit = "dehors" #permet d'afficher le personnage devant ou derière la grille
         if pyxel.frame_count < temps + 10:
-            x = 140
+            y = 140
         elif pyxel.frame_count < temps + 20:
-            x = 130
+            y = 130
         elif pyxel.frame_count < temps + 30:
-            x = 120
+            y = 120
         elif pyxel.frame_count < temps + 40:
-            x = 110
+            y = 110
         elif pyxel.frame_count < temps + 50:
-            x = 100
+            y = 100
         elif pyxel.frame_count < temps + 60:
-            x = 90
+            y = 90
         elif pyxel.frame_count < temps + 70:
-            x = 80
+            y = 80
         elif pyxel.frame_count < temps + 80:
-            x = 90
+            y = 90
             endroit = "dedans"
         elif pyxel.frame_count < temps + 90:
-            x = 100
+            y = 100
             endroit = "dedans"
         elif pyxel.frame_count < temps + 100:
-            x = 110
+            y = 110
             endroit = "dedans"
         elif pyxel.frame_count < temps + 110:
-            x = 120
+            y = 120
             endroit = "dedans"
         elif pyxel.frame_count < temps + 120:
-            x = 130
+            y = 130
             endroit = "dedans"
         elif pyxel.frame_count < temps + 130:
-            x = 140
+            y = 140
             endroit = "dedans"
         else:
             self.etat = "prison"
@@ -210,61 +229,61 @@ class App:
 
             #dessiner tous les barreaux de la grille
             #1
-            pyxel.line(73, x - 1, 73, 61, 7)
-            pyxel.line(74, x, 74, 59, 7)
-            pyxel.line(75, x - 1, 75, 57, 7)
+            pyxel.line(73, y - 1, 73, 61, 7)
+            pyxel.line(74, y, 74, 59, 7)
+            pyxel.line(75, y - 1, 75, 57, 7)
             #2
-            pyxel.line(80, x - 1, 80, 50, 7)
-            pyxel.line(81, x, 81, 49, 7)
-            pyxel.line(82, x - 1, 82, 49, 7)
+            pyxel.line(80, y - 1, 80, 50, 7)
+            pyxel.line(81, y, 81, 49, 7)
+            pyxel.line(82, y - 1, 82, 49, 7)
             #3
-            pyxel.line(87, x - 1, 87, 45, 7)
-            pyxel.line(88, x, 88, 44, 7)
-            pyxel.line(89, x - 1, 89, 43, 7)
+            pyxel.line(87, y - 1, 87, 45, 7)
+            pyxel.line(88, y, 88, 44, 7)
+            pyxel.line(89, y - 1, 89, 43, 7)
             #4
-            pyxel.line(94, x - 1, 94, 41, 7)
-            pyxel.line(95, x, 95, 40, 7)
-            pyxel.line(96, x - 1, 96, 40, 7)
+            pyxel.line(94, y - 1, 94, 41, 7)
+            pyxel.line(95, y, 95, 40, 7)
+            pyxel.line(96, y - 1, 96, 40, 7)
             #5
-            pyxel.line(101, x - 1, 101, 38, 7)
-            pyxel.line(102, x, 102, 37, 7)
-            pyxel.line(103, x - 1, 103, 37, 7)
+            pyxel.line(101, y - 1, 101, 38, 7)
+            pyxel.line(102, y, 102, 37, 7)
+            pyxel.line(103, y - 1, 103, 37, 7)
             #6
-            pyxel.line(108, x - 1, 108, 36, 7)
-            pyxel.line(109, x, 109, 36, 7)
-            pyxel.line(110, x - 1, 110, 36, 7)
+            pyxel.line(108, y - 1, 108, 36, 7)
+            pyxel.line(109, y, 109, 36, 7)
+            pyxel.line(110, y - 1, 110, 36, 7)
             #7
-            pyxel.line(115, x - 1, 115, 35, 7)
-            pyxel.line(116, x, 116, 35, 7)
-            pyxel.line(117, x - 1, 117, 35, 7)
+            pyxel.line(115, y - 1, 115, 35, 7)
+            pyxel.line(116, y, 116, 35, 7)
+            pyxel.line(117, y - 1, 117, 35, 7)
             #8
-            pyxel.line(122, x - 1, 122, 35, 7)
-            pyxel.line(123, x, 123, 35, 7)
-            pyxel.line(124, x - 1, 124, 35, 7)
+            pyxel.line(122, y - 1, 122, 35, 7)
+            pyxel.line(123, y, 123, 35, 7)
+            pyxel.line(124, y - 1, 124, 35, 7)
             #9
-            pyxel.line(129, x - 1, 129, 36, 7)
-            pyxel.line(130, x, 130, 36, 7)
-            pyxel.line(131, x - 1, 131, 36, 7)
+            pyxel.line(129, y - 1, 129, 36, 7)
+            pyxel.line(130, y, 130, 36, 7)
+            pyxel.line(131, y - 1, 131, 36, 7)
             #10
-            pyxel.line(136, x - 1, 136, 37, 7)
-            pyxel.line(137, x, 137, 37, 7)
-            pyxel.line(138, x - 1, 138, 38, 7)
+            pyxel.line(136, y - 1, 136, 37, 7)
+            pyxel.line(137, y, 137, 37, 7)
+            pyxel.line(138, y - 1, 138, 38, 7)
             #11
-            pyxel.line(143, x - 1, 143, 40, 7)
-            pyxel.line(144, x, 144, 40, 7)
-            pyxel.line(145, x - 1, 145, 41, 7)
+            pyxel.line(143, y - 1, 143, 40, 7)
+            pyxel.line(144, y, 144, 40, 7)
+            pyxel.line(145, y - 1, 145, 41, 7)
             #12
-            pyxel.line(150, x - 1, 150, 43, 7)
-            pyxel.line(151, x, 151, 44, 7)
-            pyxel.line(152, x - 1, 152, 45, 7)
+            pyxel.line(150, y - 1, 150, 43, 7)
+            pyxel.line(151, y, 151, 44, 7)
+            pyxel.line(152, y - 1, 152, 45, 7)
             #13
-            pyxel.line(157, x - 1, 157, 49, 7)
-            pyxel.line(158, x, 158, 49, 7)
-            pyxel.line(159, x - 1, 159, 50, 7)
+            pyxel.line(157, y - 1, 157, 49, 7)
+            pyxel.line(158, y, 158, 49, 7)
+            pyxel.line(159, y - 1, 159, 50, 7)
             #14
-            pyxel.line(164, x - 1, 164, 57, 7)
-            pyxel.line(165, x, 165, 59, 7)
-            pyxel.line(166, x - 1, 166, 61, 7)
+            pyxel.line(164, y - 1, 164, 57, 7)
+            pyxel.line(165, y, 165, 59, 7)
+            pyxel.line(166, y - 1, 166, 61, 7)
             if endroit == "dehors": #permet d'afficher le personnage devant la grille
                 pyxel.blt(116, 117, 0, 0, 33, 9, 23, 8)
 

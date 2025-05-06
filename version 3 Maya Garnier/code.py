@@ -6,10 +6,10 @@ class App:
         pyxel.init(240, 140, title="phantom castle", fps=40, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load("images.pyxres") #charger l'image
         self.couleur_fond = 0 #couleur du fond, noir au début
-        self.etat = "prison" #le stade du jeu
+        self.etat = "titre" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [0, 95] #coordonnées du personnage
-        self.vitesse_perso = 5 #vitesse du personnage
+        self.vitesse_perso = 1 #vitesse du personnage
         #tableau représentant l'etat du labyrinthe, coupé en une grille de bloc de 5 par 5, chaque couple  ((0 : pas de bloc, 1 : un bloc), nombre de bloc d'affiler avec cet etat), 1 représente le couple (1, 1), 2 représente le couple (0, 2)
         self.t_labyrinthe = [[(0,20),1,2,1,(0,16),1,(0,7)], [(0,20),1,2,1,(0,16),1,(0,7)], [2,(1,13),(0,5),1,2,1,2,(1,8),2,(1,5),2,(1,2),(0,3)], [2, 1,(0,8),1,2,1,2,(1,4),2,1,2,(1,3),(0,15),1,(0,3)], [2,1,(0,8),1,2,1,2,1,(0,5),1,(0,4),1,(0,15),1,(0,3)], [2,1,2,(1,4),2,1,2,1,2,1,(0,5),1,(0,4),(1,3),2,(1,5),2,(1,5),(0,3)], [2,1,2,1,2,1,2,1,2,1,2,1,2,(1,6),2,1,(0,8),1,2,1,2,1,(0,4)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,(0,8),1,2,1,2,1,2,(1,2)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,2,(1,4),2,1,2,1,2,1,(0,4)], [(1,3),2,1,(0,5),1,2,(1,6),2,1,2,(1,4),2,1,(0,5),1,2,1,2,1,(0,4)], [(0,5),1,(0,5),1,(0,7),1,2,1,(0,8),1,(0,5),(1,4),2,(1,3),(0,2)], [(0,5),1,2,1,2,1,(0,7),1,2,1,(0,8),1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,2,(1,6),2,1,2,(1,4),2,1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,2,(1,4),2,(1,3),2,1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,(0,8),(1,3),2,1,(0,2)], [(1,3),2,1,2,1,2,(1,3),2,1,2,(1,4),2,1,2,(1,4),(0,8),(1,3),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,2,(1,15),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,(0,16),1,2,1,(0,2)], [2,(1,7),2,1,2,(1,3),2,(1,7),(0,16),1,2,1,(0,2)], [2,1,(0,8),1,(0,17),(1,14),2,1,(0,2)], [2,1,(0,8),1,(0,17),1,(0,15),1,(0,2)], [2,1,2,(1,9),2,(1,8),2,(1,4),(0,15),1,(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,2,(1,14),(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,(0,15),1,(0,2)], [2,(1,6),2,1,2,1,2,1,2,(1,5),2,1,2,1,(0,15),1,(0,2)], [2,1,(0,7),1,2,1,2,1,2,(1,5),2,1,2,1,2,(1,8),2,1,2,1,(0,2)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)]]
         #construction du tableau avec tout les 0 et les 1
@@ -28,7 +28,6 @@ class App:
             self.tab_labyrinthe.append(tab)
 
         self.perso_labyrinthe = [154, 135]#les coordonnées du personnage dans le labyrinthe
-        self.tab_code = []
 
         pyxel.run(self.update, self.draw)
 
@@ -73,13 +72,8 @@ class App:
             pyxel.cls(0)
 
         if self.etat == "couloir":
-            if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 95 and self.coordonnee_perso[0] < 115: #si on appuie sur la touche entrée quand le personnage se trouve sur la porte avec le numéro 8, le personnage entre dans le labyrinthe
+            if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 95 and self.coordonnee_perso[0] < 120: #si on appuie sur la touche entrée quand le personnage se trouve sur la porte avec le numéro 8, le personnage entre dans le labyrinthe
                 self.etat = "labyrinthe"
-            if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 53 and self.coordonnee_perso[0] < 75:
-                self.etat = "salle 2"
-            if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 11 and self.coordonnee_perso[0] < 33:
-                self.etat = "salle 1 fermé"
-                self.temps = pyxel.frame_count
 
         if self.etat == "labyrinthe": #déplacer le personnage dans le labyrinthe
             if pyxel.btn(pyxel.KEY_LEFT) and self.perso_labyrinthe[0] > 3: #gauche
@@ -111,8 +105,6 @@ class App:
 
             if self.perso_labyrinthe[1] > 131 and self.perso_labyrinthe[1] < 137 and self.perso_labyrinthe[0] < 9: #deuxième sortie
                 self.etat = "couloir"
-        #if self.etat == "salle 1 fermé":
-
 
 
 
@@ -141,62 +133,9 @@ class App:
             pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
         elif self.etat == "labyrinthe": #affiche le labyrinthe
             self.labyrinthe()
-        elif self.etat == "salle 2":
-            pyxel.cls(8)
-        elif self.etat == "salle 1 fermé":
-            self.ouverture_porte()
         elif self.etat == "mort1": #affiche la première mort possible
             pyxel.cls(0)
-            pyxel.text(100, 60, "vous etes mort !!!", 7)
-
-
-    def ouverture_porte(self):
-        pyxel.rect(70, 40, 100, 60, 0)
-        pyxel.text(93, 60, "entrer le code", 7)
-        pyxel.line(101, 85, 107, 85, 7)
-        pyxel.line(111, 85, 117, 85, 7)
-        pyxel.line(121, 85, 127, 85, 7)
-        pyxel.line(131, 85, 137, 85, 7)
-        if len(self.tab_code) < 4:
-            if self.temps + 10 < pyxel.frame_count:
-                if (pyxel.btn(pyxel.KEY_0) or pyxel.btn(pyxel.KEY_KP_0)):
-                    self.temps = pyxel.frame_count
-                    self.tab_code.append(0)
-                elif pyxel.btn(pyxel.KEY_1) or pyxel.btn(pyxel.KEY_KP_1):
-                    self.temps = pyxel.frame_count
-                    self.tab_code.append(1)
-                elif pyxel.btn(pyxel.KEY_2) or pyxel.btn(pyxel.KEY_KP_2):
-                    self.temps = pyxel.frame_count
-                    self.tab_code.append(2)
-                elif pyxel.btn(pyxel.KEY_3) or pyxel.btn(pyxel.KEY_KP_3):
-                    self.temps = pyxel.frame_count
-                    self.tab_code.append(3)
-                elif pyxel.btn(pyxel.KEY_4) or pyxel.btn(pyxel.KEY_KP_4):
-                    self.temps = pyxel.frame_count
-                    self.tab_code.append(4)
-                elif pyxel.btn(pyxel.KEY_5) or pyxel.btn(pyxel.KEY_KP_5):
-                    self.temps = pyxel.frame_count
-                    self.tab_code.append(5)
-                elif pyxel.btn(pyxel.KEY_6) or pyxel.btn(pyxel.KEY_KP_6):
-                    self.temps = pyxel.frame_count
-                    self.tab_code.append(6)
-                elif pyxel.btn(pyxel.KEY_7) or pyxel.btn(pyxel.KEY_KP_7):
-                    self.temps = pyxel.frame_count
-                    self.tab_code.append(7)
-                elif pyxel.btn(pyxel.KEY_8) or pyxel.btn(pyxel.KEY_KP_8):
-                    self.temps = pyxel.frame_count
-                    self.tab_code.append(8)
-                elif pyxel.btn(pyxel.KEY_9) or pyxel.btn(pyxel.KEY_KP_9):
-                    self.temps = pyxel.frame_count
-                    self.tab_code.append(9)
-        if pyxel.btn(pyxel.KEY_BACKSPACE) and len(self.tab_code) > 0 and self.temps + 10 < pyxel.frame_count:
-            tab = []
-            for i in range(len(self.tab_code)-1):
-                tab.append(self.tab_code[i])
-            self.tab_code = tab
-            self.temps = pyxel.frame_count
-        for i in range(len(self.tab_code)):
-            pyxel.text(103 + (i*10), 79, str(self.tab_code[i]), 7)
+            pyxel.text(100, 60, "vous êtes mort !!!", 7)
 
 
     def prison(self):

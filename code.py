@@ -51,10 +51,11 @@ class App:
                 self.etat = "entrer dans le chateau"
                 self.temps = pyxel.frame_count
                 self.souris(True)
-            elif self.etat == "prison" and pyxel.frame_count - self.temps > 10: #changer l'écran après la grille
+            """elif self.etat == "prison" and pyxel.frame_count - self.temps > 10: #changer l'écran après la grille
                 pyxel.cls(6)
                 self.etat = "couloir"
-                self.temps = pyxel.frame_count
+                self.coordonnee_perso = [50, 50]
+                self.temps = pyxel.frame_count"""
 
         if self.etat == "entrer dans le chateau" or self.etat == "couloir": #pouvoir déplacer le personnage
             if pyxel.btn(pyxel.KEY_LEFT) and self.coordonnee_perso[0] > 0: #le personnage va à gauche, mais ne peut pas sortir de la fenêtre d'affichage
@@ -68,7 +69,7 @@ class App:
                 self.temps = pyxel.frame_count
                 if self.etat == "entrer dans le chateau":
                     self.etat = "grille"
-                    self.coordonnee_perso = [50, 90]
+                    """self.coordonnee_perso = [150, 90] #coordonnée du perso dans la prison"""
 
         if self.etat == "prison": #pouvoir déplacer le personnage dans la prison
             if pyxel.btn(pyxel.KEY_LEFT) and self.coordonnee_perso[0] > 0: #le personnage va à gauche, mais ne peut pas sortir de la fenêtre d'affichage
@@ -80,11 +81,12 @@ class App:
             pyxel.cls(0)
 
         if self.etat == "couloir":
+            self.souris(False)
             if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 95 and self.coordonnee_perso[0] < 115: #si on appuie sur la touche entrée quand le personnage se trouve sur la porte avec le numéro 8, le personnage entre dans le labyrinthe
                 self.etat = "labyrinthe"
             if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 53 and self.coordonnee_perso[0] < 75:
                 self.etat = "salle 2"
-            if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 11 and self.coordonnee_perso[0] < 33:
+            if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 11 and self.coordonnee_perso[0] < 33 and self.temps + 10 < pyxel.frame_count:
                 self.etat = "salle 1 fermé"
                 self.temps = pyxel.frame_count
 
@@ -145,25 +147,44 @@ class App:
             self.prison()
         elif self.etat == "couloir": #affiche le couloir
             self.couloir()
-
+        elif self.etat == "indice papier couloir":
+            self.indice_couloir()
         elif self.etat == "labyrinthe": #affiche le labyrinthe
             self.labyrinthe()
         elif self.etat == "salle 2":
             pyxel.cls(8)
         elif self.etat == "salle 1 fermé":
             self.ouverture_porte()
+        elif self.etat == "salle 1":
+            pyxel.cls(8)
         elif self.etat == "mort1": #affiche la première mort possible
             pyxel.cls(0)
             pyxel.text(100, 60, "vous etes mort !!!", 7)
 
 
+    def indice_couloir(self):
+        pyxel.rect(80, 20, 85, 100, 15)
+        pyxel.text(85, 30, "-------------------", 13)
+        pyxel.text(85, 40, "-------------------", 13)
+        pyxel.text(85, 50, "-------------------", 13)
+        pyxel.text(85, 60, "-------------------", 13)
+        pyxel.text(85, 70, "-------------------", 13)
+        pyxel.text(85, 80, "-------------------", 13)
+        pyxel.text(85, 90, "-------------------", 13)
+        pyxel.text(85, 100, "le code est :", 13)
+        pyxel.text(85, 110, "0001 1000 0110 1000", 13)
+        if pyxel.btn(pyxel.KEY_RETURN) and self.temps + 10 < pyxel.frame_count:
+            self.etat = "couloir"
+            self.temps = pyxel.frame_count
+
+
     def ouverture_porte(self):
-        pyxel.rect(70, 40, 100, 60, 0)
-        pyxel.text(93, 60, "entrer le code", 7)
-        pyxel.line(101, 85, 107, 85, 7)
-        pyxel.line(111, 85, 117, 85, 7)
-        pyxel.line(121, 85, 127, 85, 7)
-        pyxel.line(131, 85, 137, 85, 7)
+        pyxel.rect(70, 32, 100, 60, 0)
+        pyxel.text(92, 50, "entrer le code", 7)
+        pyxel.line(101, 75, 107, 75, 7)
+        pyxel.line(111, 75, 117, 75, 7)
+        pyxel.line(121, 75, 127, 75, 7)
+        pyxel.line(131, 75, 137, 75, 7)
         if len(self.tab_code) < 4:
             if self.temps + 10 < pyxel.frame_count:
                 if (pyxel.btn(pyxel.KEY_0) or pyxel.btn(pyxel.KEY_KP_0)):
@@ -202,8 +223,15 @@ class App:
                 tab.append(self.tab_code[i])
             self.tab_code = tab
             self.temps = pyxel.frame_count
+        if len(self.tab_code) == 4 and pyxel.btn(pyxel.KEY_RETURN):
+            if self.tab_code == [1, 8, 6, 8]:
+                self.etat = "salle 1"
+            else:
+                self.temps = pyxel.frame_count
+                self.tab_code = []
+                self.etat = "couloir"
         for i in range(len(self.tab_code)):
-            pyxel.text(103 + (i*10), 79, str(self.tab_code[i]), 7)
+            pyxel.text(103 + (i*10), 69, str(self.tab_code[i]), 7)
 
     def mur_fond_brique(self):
         pyxel.bltm(0, 0, 0, 0, 0, 64, 128, 0)
@@ -230,12 +258,14 @@ class App:
         #pyxel.line(232, 0, 232, 140, 7)
         #pyxel.line(233, 0, 233, 140, 7)
         for y in [20, 56, 89, 120]:
-            pyxel.pset(216, y, 13)
-            pyxel.pset(217, y - 8, 13)
-            pyxel.pset(218, y + 10, 13)
+            pyxel.pset(21, y, 13)
+            pyxel.pset(22, y - 8, 13)
+            pyxel.pset(23, y + 10, 13)
 
-        if self.coordonnee_perso[0] < 215 and self.coordonnee_perso[0] > 200 and pyxel.btn(pyxel.KEY_RETURN):
+        if self.coordonnee_perso[0] < 28 and self.coordonnee_perso[0] > 10 and pyxel.btn(pyxel.KEY_RETURN):
             self.etat = "couloir"
+            print("ok")
+            self.coordonnee_perso = [210, 92] #coordonnées du personnage dans le couloir 117
 
 
 
@@ -262,7 +292,12 @@ class App:
         pyxel.blt(26, 94, 0, 21, 35, 4, 5, 0)#8
         pyxel.blt(66, 94, 0, 26, 35, 4, 5, 0)#6
         pyxel.blt(108, 94, 0, 21, 35, 4, 5, 0)#8
-        pyxel.blt(self.coordonnee_perso[0], 120, 0, 0, 33, 9, 23, 8)
+        pyxel.blt(160, 85, 1, 32, 120, 48, 24, 8)#tableau
+        pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 56, 18, 48, 8)
+        if self.coordonnee_perso[0] > 185 and self.coordonnee_perso[0] < 205 and pyxel.btn(pyxel.KEY_RETURN) and self.temps + 10 < pyxel.frame_count:
+            self.etat = "indice papier couloir"
+            self.temps = pyxel.frame_count
+        #pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
 
 
     def ouverture_grille(self, temps):
@@ -309,6 +344,7 @@ class App:
             endroit = "dedans"
         else:
             self.etat = "prison"
+            self.coordonnee_perso = [200, 90]
         if self.etat != "prison":
             if endroit == "dedans": #afficher le personnage derrière la grille
                 pyxel.blt(113, 92, 0, 0, 56, 18, 48, 8)

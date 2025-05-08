@@ -5,16 +5,16 @@ class App:
     def __init__(self):
         pyxel.init(240, 140, title="phantom castle", fps=50, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load("images.pyxres") #charger l'image
-        self.couleur_fond = 0 #couleur du fond, noir au début
+        #self.couleur_fond = 0 #couleur du fond, noir au début pas utilisé
         self.etat = "titre" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [0, 95] #coordonnées du personnage
         self.vitesse_perso = 1 #vitesse du personnage
         #tableau représentant l'etat du labyrinthe, coupé en une grille de bloc de 5 par 5, chaque couple  ((0 : pas de bloc, 1 : un bloc), nombre de bloc d'affiler avec cet etat), 1 représente le couple (1, 1), 2 représente le couple (0, 2)
-        self.t_labyrinthe = [[(0,20),1,2,1,(0,16),1,(0,7)], [(0,20),1,2,1,(0,16),1,(0,7)], [2,(1,13),(0,5),1,2,1,2,(1,8),2,(1,5),2,(1,2),(0,3)], [2, 1,(0,8),1,2,1,2,(1,4),2,1,2,(1,3),(0,15),1,(0,3)], [2,1,(0,8),1,2,1,2,1,(0,5),1,(0,4),1,(0,15),1,(0,3)], [2,1,2,(1,4),2,1,2,1,2,1,(0,5),1,(0,4),(1,3),2,(1,5),2,(1,5),(0,3)], [2,1,2,1,2,1,2,1,2,1,2,1,2,(1,6),2,1,(0,8),1,2,1,2,1,(0,4)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,(0,8),1,2,1,2,1,2,(1,2)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,2,(1,4),2,1,2,1,2,1,(0,4)], [(1,3),2,1,(0,5),1,2,(1,6),2,1,2,(1,4),2,1,(0,5),1,2,1,2,1,(0,4)], [(0,5),1,(0,5),1,(0,7),1,2,1,(0,8),1,(0,5),(1,4),2,(1,3),(0,2)], [(0,5),1,2,1,2,1,(0,7),1,2,1,(0,8),1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,2,(1,6),2,1,2,(1,4),2,1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,2,(1,4),2,(1,3),2,1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,(0,8),(1,3),2,1,(0,2)], [(1,3),2,1,2,1,2,(1,3),2,1,2,(1,4),2,1,2,(1,4),(0,8),(1,3),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,2,(1,15),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,(0,16),1,2,1,(0,2)], [2,(1,7),2,1,2,(1,3),2,(1,7),(0,16),1,2,1,(0,2)], [2,1,(0,8),1,(0,17),(1,14),2,1,(0,2)], [2,1,(0,8),1,(0,17),1,(0,15),1,(0,2)], [2,1,2,(1,9),2,(1,8),2,(1,4),(0,15),1,(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,2,(1,14),(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,(0,15),1,(0,2)], [2,(1,6),2,1,2,1,2,1,2,(1,5),2,1,2,1,(0,15),1,(0,2)], [2,1,(0,7),1,2,1,2,1,2,(1,5),2,1,2,1,2,(1,8),2,1,2,1,(0,2)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)]]
+        self.tab_labyrinthe = [[(0,20),1,2,1,(0,16),1,(0,7)], [(0,20),1,2,1,(0,16),1,(0,7)], [2,(1,13),(0,5),1,2,1,2,(1,8),2,(1,5),2,(1,2),(0,3)], [2, 1,(0,8),1,2,1,2,(1,4),2,1,2,(1,3),(0,15),1,(0,3)], [2,1,(0,8),1,2,1,2,1,(0,5),1,(0,4),1,(0,15),1,(0,3)], [2,1,2,(1,4),2,1,2,1,2,1,(0,5),1,(0,4),(1,3),2,(1,5),2,(1,5),(0,3)], [2,1,2,1,2,1,2,1,2,1,2,1,2,(1,6),2,1,(0,8),1,2,1,2,1,(0,4)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,(0,8),1,2,1,2,1,2,(1,2)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,2,(1,4),2,1,2,1,2,1,(0,4)], [(1,3),2,1,(0,5),1,2,(1,6),2,1,2,(1,4),2,1,(0,5),1,2,1,2,1,(0,4)], [(0,5),1,(0,5),1,(0,7),1,2,1,(0,8),1,(0,5),(1,4),2,(1,3),(0,2)], [(0,5),1,2,1,2,1,(0,7),1,2,1,(0,8),1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,2,(1,6),2,1,2,(1,4),2,1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,2,(1,4),2,(1,3),2,1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,(0,8),(1,3),2,1,(0,2)], [(1,3),2,1,2,1,2,(1,3),2,1,2,(1,4),2,1,2,(1,4),(0,8),(1,3),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,2,(1,15),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,(0,16),1,2,1,(0,2)], [2,(1,7),2,1,2,(1,3),2,(1,7),(0,16),1,2,1,(0,2)], [2,1,(0,8),1,(0,17),(1,14),2,1,(0,2)], [2,1,(0,8),1,(0,17),1,(0,15),1,(0,2)], [2,1,2,(1,9),2,(1,8),2,(1,4),(0,15),1,(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,2,(1,14),(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,(0,15),1,(0,2)], [2,(1,6),2,1,2,1,2,1,2,(1,5),2,1,2,1,(0,15),1,(0,2)], [2,1,(0,7),1,2,1,2,1,2,(1,5),2,1,2,1,2,(1,8),2,1,2,1,(0,2)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)]]
         #construction du tableau avec tout les 0 et les 1
-        self.tab_labyrinthe = []
-        for ligne in self.t_labyrinthe:
+        t_labyrinthe = []
+        for ligne in self.tab_labyrinthe:
             tab = []
             for couple in ligne:
                 if couple == 1:
@@ -25,32 +25,31 @@ class App:
                 else:
                     for i in range(couple[1]):
                         tab.append(couple[0])
-            self.tab_labyrinthe.append(tab)
-
-        self.perso_labyrinthe = [154, 135]#les coordonnées du personnage dans le labyrinthe
+            t_labyrinthe.append(tab)
+        self.tab_labyrinthe = t_labyrinthe
         self.tab_code = []
 
         pyxel.run(self.update, self.draw)
 
 
     def update(self):
-        if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
+        #if pyxel.btn(pyxel.KEY_SPACE): #la touche espace permet de modifier l'affichage de l'écran
 
-            if self.etat == "titre" and pyxel.frame_count - self.temps > 10: #changer l'écran après le titre
-                self.etat = "texte"
-                pyxel.cls(0)
-                self.temps = pyxel.frame_count
+        if self.etat == "titre" and pyxel.frame_count - self.temps > 150: #changer l'écran après le titre
+            self.etat = "texte"
+            pyxel.cls(0)
+            self.temps = pyxel.frame_count
 
-            elif self.etat == "texte" and pyxel.frame_count - self.temps > 10: #changer l'écran après le texte
-                pyxel.cls(0)
-                self.etat = "chateau"
-                self.temps = pyxel.frame_count
+        elif self.etat == "texte" and pyxel.frame_count - self.temps > 600: #changer l'écran après le texte
+            pyxel.cls(0)
+            self.etat = "chateau"
+            self.temps = pyxel.frame_count
 
-            elif self.etat == "chateau" and pyxel.frame_count - self.temps > 10: #changer l'écran après le chateau
-                pyxel.cls(0)
-                self.etat = "entrer dans le chateau"
-                self.temps = pyxel.frame_count
-                self.souris(True)
+        elif self.etat == "chateau" and pyxel.frame_count - self.temps > 100: #changer l'écran après le chateau
+            pyxel.cls(0)
+            self.etat = "entrer dans le chateau"
+            self.temps = pyxel.frame_count
+            self.souris(True)
             """elif self.etat == "prison" and pyxel.frame_count - self.temps > 10: #changer l'écran après la grille
                 pyxel.cls(6)
                 self.etat = "couloir"
@@ -84,6 +83,7 @@ class App:
             self.souris(False)
             if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 95 and self.coordonnee_perso[0] < 115: #si on appuie sur la touche entrée quand le personnage se trouve sur la porte avec le numéro 8, le personnage entre dans le labyrinthe
                 self.etat = "labyrinthe"
+                self.coordonnee_perso = [154, 135]
             if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 53 and self.coordonnee_perso[0] < 75:
                 self.etat = "salle 2"
             if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 11 and self.coordonnee_perso[0] < 33 and self.temps + 10 < pyxel.frame_count:
@@ -91,35 +91,36 @@ class App:
                 self.temps = pyxel.frame_count
 
         if self.etat == "labyrinthe": #déplacer le personnage dans le labyrinthe
-            if pyxel.btn(pyxel.KEY_LEFT) and self.perso_labyrinthe[0] > 3: #gauche
-                if self.tab_labyrinthe[self.perso_labyrinthe[1]//5][(self.perso_labyrinthe[0]-4)//5] == 1:
-                    self.perso_labyrinthe[0] = self.perso_labyrinthe[0]
+            if pyxel.btn(pyxel.KEY_LEFT) and self.coordonnee_perso[0] > 3: #gauche
+                if self.tab_labyrinthe[self.coordonnee_perso[1]//5][(self.coordonnee_perso[0]-4)//5] == 1:
+                    self.coordonnee_perso[0] = self.coordonnee_perso[0]
                 else:
-                    self.perso_labyrinthe[0] = self.perso_labyrinthe[0] - 1
+                    self.coordonnee_perso[0] = self.coordonnee_perso[0] - 1
 
-            if pyxel.btn(pyxel.KEY_RIGHT) and self.perso_labyrinthe[0] < 236: #droite
-                if self.tab_labyrinthe[self.perso_labyrinthe[1]//5][(self.perso_labyrinthe[0]+4)//5] == 1 :
-                    self.perso_labyrinthe[0] = self.perso_labyrinthe[0]
+            if pyxel.btn(pyxel.KEY_RIGHT) and self.coordonnee_perso[0] < 236: #droite
+                if self.tab_labyrinthe[self.coordonnee_perso[1]//5][(self.coordonnee_perso[0]+4)//5] == 1 :
+                    self.coordonnee_perso[0] = self.coordonnee_perso[0]
                 else:
-                    self.perso_labyrinthe[0] = self.perso_labyrinthe[0] + 1
+                    self.coordonnee_perso[0] = self.coordonnee_perso[0] + 1
 
-            if pyxel.btn(pyxel.KEY_UP) and self.perso_labyrinthe[1] > 3: #haut
-                if self.tab_labyrinthe[(self.perso_labyrinthe[1]-4)//5][self.perso_labyrinthe[0]//5] == 1:
-                    self.perso_labyrinthe[1] = self.perso_labyrinthe[1]
+            if pyxel.btn(pyxel.KEY_UP) and self.coordonnee_perso[1] > 3: #haut
+                if self.tab_labyrinthe[(self.coordonnee_perso[1]-4)//5][self.coordonnee_perso[0]//5] == 1:
+                    self.coordonnee_perso[1] = self.coordonnee_perso[1]
                 else:
-                    self.perso_labyrinthe[1] = self.perso_labyrinthe[1] - 1
+                    self.coordonnee_perso[1] = self.coordonnee_perso[1] - 1
 
-            if pyxel.btn(pyxel.KEY_DOWN) and self.perso_labyrinthe[1] < 136: #bas
-                if self.tab_labyrinthe[(self.perso_labyrinthe[1]+4)//5][self.perso_labyrinthe[0]//5] == 1:
-                    self.perso_labyrinthe[1] = self.perso_labyrinthe[1]
+            if pyxel.btn(pyxel.KEY_DOWN) and self.coordonnee_perso[1] < 136: #bas
+                if self.tab_labyrinthe[(self.coordonnee_perso[1]+4)//5][self.coordonnee_perso[0]//5] == 1:
+                    self.coordonnee_perso[1] = self.coordonnee_perso[1]
                 else:
-                    self.perso_labyrinthe[1] = self.perso_labyrinthe[1] + 1
+                    self.coordonnee_perso[1] = self.coordonnee_perso[1] + 1
 
-            if self.perso_labyrinthe[1] < 9 and self.perso_labyrinthe[0] > 105 and self.perso_labyrinthe[0] < 112: #première sortie
+            if self.coordonnee_perso[1] < 9 and self.coordonnee_perso[0] > 105 and self.coordonnee_perso[0] < 112: #première sortie
                 self.etat = "mort1"
 
-            if self.perso_labyrinthe[1] > 131 and self.perso_labyrinthe[1] < 137 and self.perso_labyrinthe[0] < 9: #deuxième sortie
+            if self.coordonnee_perso[1] > 131 and self.coordonnee_perso[1] < 137 and self.coordonnee_perso[0] < 9: #deuxième sortie
                 self.etat = "couloir"
+                self.coordonnee_perso = [210, 92]
         #if self.etat == "salle 1 fermé":
 
 
@@ -139,7 +140,6 @@ class App:
         elif self.etat == "entrer dans le chateau": #afficher l'image ou on doit faire entrer le personnage dans le chateau
             pyxel.cls(1)
             self.entrer_chateau()
-
         elif self.etat == "grille": #affiche la grille, on voit le personnage entrer dans le chateau
             pyxel.cls(0)
             self.ouverture_grille(self.temps)
@@ -147,7 +147,7 @@ class App:
             self.prison()
         elif self.etat == "couloir": #affiche le couloir
             self.couloir()
-        elif self.etat == "indice papier couloir":
+        elif self.etat == "papier couloir":
             self.indice_couloir()
         elif self.etat == "labyrinthe": #affiche le labyrinthe
             self.labyrinthe()
@@ -279,7 +279,7 @@ class App:
                     pyxel.blt(i_colonne*5, i_ligne*5, 1, 40, 112, 5, 5, 0)
         pyxel.rect(105, 0, 10, 10, 0)
         pyxel.rect(0, 130, 10, 10, 0)
-        pyxel.circ(self.perso_labyrinthe[0], self.perso_labyrinthe[1], 3, 8)
+        pyxel.circ(self.coordonnee_perso[0], self.coordonnee_perso[1], 3, 8)
 
 
     def couloir(self):
@@ -295,7 +295,7 @@ class App:
         pyxel.blt(160, 85, 1, 32, 120, 48, 24, 8)#tableau
         pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 56, 18, 48, 8)
         if self.coordonnee_perso[0] > 185 and self.coordonnee_perso[0] < 205 and pyxel.btn(pyxel.KEY_RETURN) and self.temps + 10 < pyxel.frame_count:
-            self.etat = "indice papier couloir"
+            self.etat = "papier couloir"
             self.temps = pyxel.frame_count
         #pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
 

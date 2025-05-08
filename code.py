@@ -30,6 +30,8 @@ class App:
         self.tab_labyrinthe = t_labyrinthe
         self.tab_code = []
         self.chrono = [5, 0]
+        self.temps_prison = [1, 0]
+        self.temps_labyrinthe = [1, 0]
         self.vie = True
         self.etat_aide = False
 
@@ -181,8 +183,12 @@ class App:
             pyxel.cls(0)
         elif self.etat == "corde":
             self.evasion()
+        elif self.etat == "mort labyrinthe temps":
+            pyxel.cls(7)
+        elif self.etat == "mort prison temps":
+            pyxel.cls(9)
 
-        if self.etat not in ["titre", "texte", "chateau", "grille", "corde"] and self.vie == True:
+        if self.etat not in ["titre", "texte", "chateau", "grille", "corde", "mort prison temps", "mort labyrinthe temps"] and self.vie == True:
             self.chronometre()
             self.aide()
 
@@ -229,17 +235,35 @@ class App:
                 pyxel.blt(135, 65, 0, 32, 34, 6, 6, 0) #flèche droite
 
 
-
+    def temps_ecouler(self, attribut):
+        if attribut[1] == 0:
+            attribut[1] = 59
+            attribut[0] = attribut[0] - 1
+        attribut[1] = attribut[1] - 1
 
 
     def chronometre(self):
             pyxel.blt(5, 5, 1, 32, 144, 29, 13, 8)
             if pyxel.frame_count % 55 == 0:
                 pyxel.blt(5, 5, 1, 32, 144, 29, 13, 8)
-                if self.chrono[1] == 0:
+                self.temps_ecouler(self.chrono)
+                """if self.chrono[1] == 0:
                     self.chrono[1] = 59
                     self.chrono[0] = self.chrono[0] - 1
-                self.chrono[1] = self.chrono[1] - 1
+                self.chrono[1] = self.chrono[1] - 1"""
+                if self.etat == "prison":
+                    self.temps_ecouler(self.temps_prison)
+                    """if self.temps_prison[1] == 0:
+                        self.temps_prison[1] = 59
+                        self.temps_prison[0] = self.temps_prison[0] - 1
+                    self.temps_prison[1] = self.temps_prison[1] - 1"""
+                if self.etat == "labyrinthe":
+                    self.temps_ecouler(self.temps_labyrinthe)
+                    """if self.temps_labyrinthe[1] == 0:
+                        self.temps_labyrinthe[1] = 59
+                        self.temps_labyrinthe[0] = self.temps_labyrinthe[0] - 1
+                    self.temps_labyrinthe[1] = self.temps_labyrinthe[1] - 1"""
+
             if self.chrono[0] < 10:
                 if self.chrono[1] < 10:
                     pyxel.text(10, 9, '0' + str(self.chrono[0]) + ':0' + str(self.chrono[1]), 4)
@@ -254,6 +278,10 @@ class App:
             if self.chrono == [0, 0]:
                 self.etat = "mort chrono"
                 self.vie = False
+            if self.temps_prison == [0, 0]:
+                self.etat = "mort prison temps"
+            if self.temps_labyrinthe == [0, 0]:
+                self.etat = "mort labyrinthe temps"
 
 
     def indice_couloir(self):

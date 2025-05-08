@@ -6,7 +6,7 @@ class App:
         pyxel.init(240, 140, title="phantom castle", fps=50, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load("images.pyxres") #charger l'image
         #self.couleur_fond = 0 #couleur du fond, noir au début pas utilisé
-        self.etat = "titre" #le stade du jeu
+        self.etat = "prison" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [0, 95] #coordonnées du personnage
         self.vitesse_perso = 1 #vitesse du personnage
@@ -28,6 +28,8 @@ class App:
             t_labyrinthe.append(tab)
         self.tab_labyrinthe = t_labyrinthe
         self.tab_code = []
+        self.chrono = [5, 0]
+        self.vie = True
 
         pyxel.run(self.update, self.draw)
 
@@ -68,6 +70,7 @@ class App:
                 self.temps = pyxel.frame_count
                 if self.etat == "entrer dans le chateau":
                     self.etat = "grille"
+                    self.souris(False)
                     """self.coordonnee_perso = [150, 90] #coordonnée du perso dans la prison"""
 
         if self.etat == "prison": #pouvoir déplacer le personnage dans la prison
@@ -80,7 +83,7 @@ class App:
             pyxel.cls(0)
 
         if self.etat == "couloir":
-            self.souris(False)
+            #self.souris(False)
             if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 95 and self.coordonnee_perso[0] < 115: #si on appuie sur la touche entrée quand le personnage se trouve sur la porte avec le numéro 8, le personnage entre dans le labyrinthe
                 self.etat = "labyrinthe"
                 self.coordonnee_perso = [154, 135]
@@ -116,7 +119,8 @@ class App:
                     self.coordonnee_perso[1] = self.coordonnee_perso[1] + 1
 
             if self.coordonnee_perso[1] < 9 and self.coordonnee_perso[0] > 105 and self.coordonnee_perso[0] < 112: #première sortie
-                self.etat = "mort1"
+                self.etat = "mort labyrinthe"
+                self.vie = False
 
             if self.coordonnee_perso[1] > 131 and self.coordonnee_perso[1] < 137 and self.coordonnee_perso[0] < 9: #deuxième sortie
                 self.etat = "couloir"
@@ -129,6 +133,8 @@ class App:
 
 
     def draw(self):
+
+
         if self.etat == "titre": #afficher l'image avec le titre
             self.cadre()
             self.titre()
@@ -148,18 +154,61 @@ class App:
         elif self.etat == "couloir": #affiche le couloir
             self.couloir()
         elif self.etat == "papier couloir":
+            self.couloir()
             self.indice_couloir()
         elif self.etat == "labyrinthe": #affiche le labyrinthe
             self.labyrinthe()
         elif self.etat == "salle 2":
             pyxel.cls(8)
         elif self.etat == "salle 1 fermé":
+            self.couloir()
             self.ouverture_porte()
         elif self.etat == "salle 1":
             pyxel.cls(8)
-        elif self.etat == "mort1": #affiche la première mort possible
+        elif self.etat == "mort labyrinthe": #affiche la première mort possible
             pyxel.cls(0)
             pyxel.text(100, 60, "vous etes mort !!!", 7)
+        elif self.etat == "mort chrono":
+            pyxel.cls(0)
+
+        if self.etat not in ["titre", "texte", "chateau", "entrer dans le chateau", "grille"] and self.vie == True:
+            self.chronometre()
+            self.indice()
+
+    def indice(self):
+        pyxel.circ(228, 11, 5, 4)
+        pyxel.blt(228, 9, 0, 19, 16, 1, 6, 0)#i
+        if pyxel.btn(pyxel.MOUSE_BUTTON_LEFT) and pyxel.mouse_x < 233 and pyxel.mouse_x > 223 and pyxel.mouse_y < 16 and pyxel.mouse_y > 6 and self.temps + 10 < pyxel.frame_count:
+            print("ok")
+            self.temps = pyxel.frame_count
+
+
+
+
+
+
+    def chronometre(self):
+            pyxel.blt(5, 5, 1, 32, 144, 29, 13, 8)
+            if pyxel.frame_count % 55 == 0:
+                pyxel.blt(5, 5, 1, 32, 144, 29, 13, 8)
+                if self.chrono[1] == 0:
+                    self.chrono[1] = 59
+                    self.chrono[0] = self.chrono[0] - 1
+                self.chrono[1] = self.chrono[1] - 1
+            if self.chrono[0] < 10:
+                if self.chrono[1] < 10:
+                    pyxel.text(10, 9, '0' + str(self.chrono[0]) + ':0' + str(self.chrono[1]), 4)
+                else:
+                    pyxel.text(10, 9, '0' + str(self.chrono[0]) + ':' + str(self.chrono[1]), 4)
+            else:
+                if self.chrono[1] < 10:
+                    pyxel.text(10, 9, str(self.chrono[0]) + ':0' + str(self.chrono[1]), 4)
+                else:
+                    pyxel.text(10, 9, str(self.chrono[0]) + ':' + str(self.chrono[1]), 4)
+
+            if self.chrono == [0, 0]:
+                self.etat = "mort chrono"
+                self.vie = False
 
 
     def indice_couloir(self):
@@ -245,6 +294,7 @@ class App:
 
     def prison(self):
         """Cette fonction dessine la prison."""
+        self.souris(True)
         self.mur_fond_brique()
         pyxel.blt(self.coordonnee_perso[0], 92, 0, 0, 56, 18, 48, 8)
         for x in range(6, 240, 15):
@@ -264,7 +314,6 @@ class App:
 
         if self.coordonnee_perso[0] < 28 and self.coordonnee_perso[0] > 10 and pyxel.btn(pyxel.KEY_RETURN):
             self.etat = "couloir"
-            print("ok")
             self.coordonnee_perso = [210, 92] #coordonnées du personnage dans le couloir 117
 
 
@@ -294,7 +343,7 @@ class App:
         pyxel.blt(108, 94, 0, 21, 35, 4, 5, 0)#8
         pyxel.blt(160, 85, 1, 32, 120, 48, 24, 8)#tableau
         pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 56, 18, 48, 8)
-        if self.coordonnee_perso[0] > 185 and self.coordonnee_perso[0] < 205 and pyxel.btn(pyxel.KEY_RETURN) and self.temps + 10 < pyxel.frame_count:
+        if self.coordonnee_perso[0] > 185 and self.coordonnee_perso[0] < 205 and pyxel.btn(pyxel.KEY_RETURN) and self.temps + 20 < pyxel.frame_count:
             self.etat = "papier couloir"
             self.temps = pyxel.frame_count
         #pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)

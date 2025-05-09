@@ -1,15 +1,14 @@
 import pyxel
-import random
 
 class App:
 
     def __init__(self):
         pyxel.init(240, 140, title="phantom castle", fps=50, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load("images.pyxres") #charger l'image
-        self.etat = "salle 2" #le stade du jeu
+        self.etat = "titre" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [20, 95] #coordonnées du personnage
-        self.vitesse_perso = 5 #vitesse du personnage
+        self.vitesse_perso = 1 #vitesse du personnage
         #tableau représentant l'etat du labyrinthe, coupé en une grille de bloc de 5 par 5, chaque couple  ((0 : pas de bloc, 1 : un bloc), nombre de bloc d'affiler avec cet etat), 1 représente le couple (1, 1), 2 représente le couple (0, 2)
         self.tab_labyrinthe = [[(0,20),1,2,1,(0,16),1,(0,7)], [(0,20),1,2,1,(0,16),1,(0,7)], [2,(1,13),(0,5),1,2,1,2,(1,8),2,(1,5),2,(1,2),(0,3)], [2, 1,(0,8),1,2,1,2,(1,4),2,1,2,(1,3),(0,15),1,(0,3)], [2,1,(0,8),1,2,1,2,1,(0,5),1,(0,4),1,(0,15),1,(0,3)], [2,1,2,(1,4),2,1,2,1,2,1,(0,5),1,(0,4),(1,3),2,(1,5),2,(1,5),(0,3)], [2,1,2,1,2,1,2,1,2,1,2,1,2,(1,6),2,1,(0,8),1,2,1,2,1,(0,4)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,(0,8),1,2,1,2,1,2,(1,2)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,2,(1,4),2,1,2,1,2,1,(0,4)], [(1,3),2,1,(0,5),1,2,(1,6),2,1,2,(1,4),2,1,(0,5),1,2,1,2,1,(0,4)], [(0,5),1,(0,5),1,(0,7),1,2,1,(0,8),1,(0,5),(1,4),2,(1,3),(0,2)], [(0,5),1,2,1,2,1,(0,7),1,2,1,(0,8),1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,2,(1,6),2,1,2,(1,4),2,1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,2,(1,4),2,(1,3),2,1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,(0,8),(1,3),2,1,(0,2)], [(1,3),2,1,2,1,2,(1,3),2,1,2,(1,4),2,1,2,(1,4),(0,8),(1,3),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,2,(1,15),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,(0,16),1,2,1,(0,2)], [2,(1,7),2,1,2,(1,3),2,(1,7),(0,16),1,2,1,(0,2)], [2,1,(0,8),1,(0,17),(1,14),2,1,(0,2)], [2,1,(0,8),1,(0,17),1,(0,15),1,(0,2)], [2,1,2,(1,9),2,(1,8),2,(1,4),(0,15),1,(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,2,(1,14),(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,(0,15),1,(0,2)], [2,(1,6),2,1,2,1,2,1,2,(1,5),2,1,2,1,(0,15),1,(0,2)], [2,1,(0,7),1,2,1,2,1,2,(1,5),2,1,2,1,2,(1,8),2,1,2,1,(0,2)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)]]
         #construction du tableau avec tout les 0 et les 1
@@ -54,7 +53,7 @@ class App:
             self.temps = pyxel.frame_count
             self.souris(True)
 
-        if self.etat == "entrer dans le chateau" or self.etat == "couloir" or self.etat == "prison" or self.etat == "salle 2": #pouvoir déplacer le personnage
+        if self.etat == "entrer dans le chateau" or self.etat == "couloir" or self.etat == "prison": #pouvoir déplacer le personnage
             if pyxel.btn(pyxel.KEY_LEFT) and self.coordonnee_perso[0] > 0: #le personnage va à gauche, mais ne peut pas sortir de la fenêtre d'affichage
                 self.coordonnee_perso[0] = self.coordonnee_perso[0] - self.vitesse_perso
 
@@ -67,7 +66,6 @@ class App:
                 self.souris(False)
             if self.coordonnee_perso[0] < 5 and self.etat == "entrer dans le chateau": #si le personnage 'sort' à gauche, il meurt
                 self.etat = "mort foret"
-                self.vie = False
 
         if self.etat == "couloir":
             if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 95 and self.coordonnee_perso[0] < 115: #si on appuie sur la touche entrée quand le personnage se trouve sur la porte avec le numéro 8, le personnage entre dans le labyrinthe
@@ -128,9 +126,8 @@ class App:
             self.entrer_chateau()
         elif self.etat == "mort foret": #le personnage meurt de froid dans la forêt
             pyxel.cls(0)
-            pyxel.text(30, 55, "Malheureusement vous vous etes toujours perdu.", 7)
-            pyxel.text(47, 65, "Apres plusieurs heures de marche", 7)
-            pyxel.text(45, 75, "vous finissez par mourir de froid.", 7)
+            pyxel.text(10, 50, "Malheureusement vous vous etes toujours perdu.", 7)
+            pyxel.text(10, 60, "Apres plusieurs heures de marche vous finissez par mourir de froid.", 7)
         elif self.etat == "grille": #affiche la grille, on voit le personnage entrer dans le chateau
             pyxel.cls(0)
             self.ouverture_grille(self.temps)
@@ -144,7 +141,7 @@ class App:
         elif self.etat == "labyrinthe": #affiche le labyrinthe
             self.labyrinthe()
         elif self.etat == "salle 2": #la salle numéro 6
-            self.salle_2()
+            pyxel.cls(8)
         elif self.etat == "salle 1 fermé": #la salle numéro 18 est fermé, il faut un code pour l'ouvrir
             self.couloir(False)
             self.ouverture_porte()
@@ -152,8 +149,7 @@ class App:
             pyxel.cls(8)
         elif self.etat == "mort labyrinthe": #le personnage prend la mauvaise sortie et meurt
             pyxel.cls(0)
-            pyxel.text(65, 60, "Vous etes tombee dans un trou.", 7)
-            pyxel.text(57, 70, "Vous avez fait une chute mortelle.", 7)
+            pyxel.text(100, 60, "vous etes mort !!!", 7)
         elif self.etat == "mort chrono": #le personnage n'a pas réussi à sortir dans les temps et il meurt
             pyxel.cls(0)
         elif self.etat == "corde": #le personnage essai de s'évader de la prison grâce à la corde
@@ -162,56 +158,18 @@ class App:
             pyxel.cls(7)
         elif self.etat == "mort prison temps": #le personnage n'a pas eu le temps de sortir de la prison et meurt
             pyxel.cls(9)
-        elif self.etat == "liberté prison" or self.etat == "liberté prison mort":
-            pyxel.cls(0)
-            pyxel.text(62, 50, "La code etait assez solide.", 7)
-            pyxel.text(40, 60, "Tu reussi donc a t'echapper du chateau.", 7)
-            if self.etat == "liberté prison mort":
-                pyxel.text(7, 70, "Malheureusement tu fini par mourir de faim dans la foret.", 7)
-            else:
-                pyxel.text(30, 70, "Et tu reussi aussi a rentrer chez toi en vie.", 7)
-        elif self.etat == "prison mort":
-            pyxel.cls(0)
-            pyxel.text(30, 60, "Malheureusement la code etait trop fragil.", 7)
-            pyxel.text(20, 70, "Elle s'est cassee et tu a fait un chute mortelle.", 7)
 
         if self.etat not in ["titre", "texte", "chateau", "corde", "mort prison temps", "mort labyrinthe temps"] and self.vie == True: #affiche le chronomètre et l'aide
             self.chronometre()
             self.aide()
 
-    def salle_2(self):
-        self.mur_fond_brique()
-        pyxel.blt(190, 76, 0, 18, 40, 31, 64, 0)#bibliothèque
-        pyxel.blt(30, 79, 1, 0, 112, 32, 64, 0)#porte
-        if self.coordonnee_perso[0] > 190 and self.coordonnee_perso[0] < 220 and pyxel.btn(pyxel.KEY_RETURN):
-            pyxel.rect(80, 20, 85, 100, 15)
-        pyxel.blt(self.coordonnee_perso[0], 92, 0, 0, 56, 18, 48, 8)
-
-
-
     def evasion(self):
         #pas fini
         """Le personnage tente de s'échapper de la prison, il a une chance sur cinq de sortir vivant, sinon la corde casse et il fait une chute mortelle."""
         pyxel.cls(0)
-        pyxel.text(15, 40, "Il y a assez de place pour passer entre les barreaux", 7)
-        pyxel.text(18, 50, "et on dirais qu'une corde est accrochee au barreau.", 7)
-        pyxel.text(55, 60, "Veut-tu tenter de t'echapper ?", 7)
-        pyxel.text(32, 80, "Appuie sur la touche entree pour t'echapper", 7)
-        pyxel.text(38, 90, "Appuie sur la touche effacer pour rester", 7)
-        if pyxel.btn(pyxel.KEY_RETURN) and self.temps + 20 < pyxel.frame_count:
-            self.temps = pyxel.frame_count
-            if random.choice([True, False]):
-                if random.choice([True, False]):
-                    self.etat = "liberté prison"
-                    self.vie = False
-                else:
-                    self.etat = "liberté prison mort"
-                    self.vie = False
-            else:
-                self.etat = "prison mort"
-                self.vie = False
-        if pyxel.btn(pyxel.KEY_BACKSPACE):
-            self.etat = "prison"
+        pyxel.text(10, 10, "Il y a assez de place pour passer entre les barreaux,", 7)
+        pyxel.text(10, 20, "et on dirais qu'une corde est accrochee au barreau.", 7)
+        pyxel.text(10, 30, "Veut-tu tenter de t'echapper ?", 7)
 
     def aide(self):
         """Un petit i s'affiche au coin supérieur droit de l'écran, si on clique dessus avec la souris, le joueur peut voir les touches et actions auquels il a accès"""
@@ -294,13 +252,13 @@ class App:
     def indice_couloir(self):
         """Cette fonction affiche le papier caché derrière le tableau dans le couloir"""
         pyxel.rect(80, 20, 85, 100, 15)
-        pyxel.text(85, 30, "Il y a 157 ans", 13)
-        pyxel.text(85, 40, "il y eu un drame", 13)
-        pyxel.text(85, 50, "dans ce chateau.", 13)
-        pyxel.text(85, 60, "Quelqu'un est mort.", 13)
-        pyxel.text(85, 70, "Trouver des indices", 13)
-        pyxel.text(85, 80, "pour reconstituer", 13)
-        pyxel.text(85, 90, "l'histoire.", 13)
+        pyxel.text(85, 30, "-------------------", 13)
+        pyxel.text(85, 40, "-------------------", 13)
+        pyxel.text(85, 50, "-------------------", 13)
+        pyxel.text(85, 60, "-------------------", 13)
+        pyxel.text(85, 70, "-------------------", 13)
+        pyxel.text(85, 80, "-------------------", 13)
+        pyxel.text(85, 90, "-------------------", 13)
         pyxel.text(85, 100, "le code est :", 13)
         pyxel.text(85, 110, "0001 1000 0110 1000", 13)
         if pyxel.btn(pyxel.KEY_RETURN) and self.temps + 10 < pyxel.frame_count: #reposer le papier
@@ -407,7 +365,6 @@ class App:
 
         if self.coordonnee_perso[0] < 190 and self.coordonnee_perso[0] > 170 and pyxel.btn(pyxel.KEY_RETURN): #le joueur s'échappe par la corde
             self.etat = "corde"
-            self.temps = pyxel.frame_count
             self.souris(False)
 
     def labyrinthe(self):
@@ -776,5 +733,4 @@ class App:
     def souris(self, etat):
         """La fonction fait apparaitre ou disparaitre la souris"""
         pyxel.mouse(etat)
-
 App()

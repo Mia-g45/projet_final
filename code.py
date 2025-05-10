@@ -6,8 +6,7 @@ class App:
     def __init__(self):
         pyxel.init(240, 140, title="phantom castle", fps=50, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load("images.pyxres") #charger l'image
-        self.etat = "couloir" #le stade du jeu
-        self.souris(True)
+        self.etat = "prison" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [20, 95] #coordonnées du personnage
         self.vitesse_perso = 1#vitesse du personnage
@@ -36,6 +35,7 @@ class App:
         self.etat_aide = False #afficher ou non la fenêtre avec les actions qu'on peut faire
         self.livre = 0
         self.objet = []
+        self.i_conversation = 0
 
         pyxel.run(self.update, self.draw)
 
@@ -139,6 +139,7 @@ class App:
             self.entrer_chateau()
         elif self.etat == "mort foret": #le personnage meurt de froid dans la forêt
             self.cadre()
+            pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
             pyxel.text(30, 55, "Malheureusement vous vous etes toujours perdu.", 7)
             pyxel.text(47, 65, "Apres plusieurs heures de marche", 7)
             pyxel.text(45, 75, "vous finissez par mourir de froid.", 7)
@@ -162,10 +163,12 @@ class App:
             self.salle_1()
         elif self.etat == "mort labyrinthe": #le personnage prend la mauvaise sortie et meurt
             self.cadre()
+            pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
             pyxel.text(65, 60, "Vous etes tombe dans un trou.", 7)
             pyxel.text(57, 70, "Vous avez fait une chute mortelle.", 7)
         elif self.etat == "mort chrono": #le personnage n'a pas réussi à sortir dans les temps et il meurt
             self.cadre()
+            pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
             pyxel.text(65, 60, "Vous avez mis trop de temps.", 7)
             pyxel.text(40, 70, "Vous finissez par mourir dans ce chateau.", 7)
         elif self.etat == "corde": #le personnage essai de s'évader de la prison grâce à la corde
@@ -173,10 +176,12 @@ class App:
             self.evasion()
         elif self.etat == "mort labyrinthe temps": #le personnage n'a pas eu le temps de sortir du labyrinthe et meurt
             self.cadre()
+            pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
             pyxel.text(65, 60, "Vous avez mis trop de temps.", 7)
             pyxel.text(40, 70, "Vous finissez par mourir dans ce chateau.", 7)
         elif self.etat == "mort prison temps": #le personnage n'a pas eu le temps de sortir de la prison et meurt
             self.cadre()
+            pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
             pyxel.text(35, 60, "Vous n'avez pas reussi a sortir de la prison.", 7)
             pyxel.text(25, 70, "Vous finissez par mourir de faim dans ce chateau.", 7)
         elif self.etat == "liberté prison" or self.etat == "liberté prison mort":
@@ -184,17 +189,53 @@ class App:
             pyxel.text(62, 50, "La corde etait assez solide.", 7)
             pyxel.text(40, 60, "Tu reussi donc a t'echapper du chateau.", 7)
             if self.etat == "liberté prison mort":
+                pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
                 pyxel.text(7, 70, "Malheureusement tu fini par mourir de faim dans la foret.", 7)
             else:
                 pyxel.text(30, 70, "Et tu reussi aussi a rentrer chez toi en vie.", 7)
         elif self.etat == "prison mort":
             self.cadre()
+            pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
             pyxel.text(30, 60, "Malheureusement la corde etait trop fragile.", 7)
             pyxel.text(20, 70, "Elle s'est cassee et tu a fait un chute mortelle.", 7)
+        elif self.etat == "découverte":
+            pyxel.cls(0)
+            pyxel.text(50, 65, "Il y a un squelette dans le coffre,", 7)
+            pyxel.text(70, 75, "c'est celui d'un enfant.", 7)
+            if self.temps + 250 < pyxel.frame_count:
+                self.etat = "discution"
+                self.temps = pyxel.frame_count
+
+        elif self.etat == "discution":
+            self.conversation()
 
         if self.etat not in ["titre", "texte", "chateau", "corde", "mort prison temps", "mort labyrinthe temps"] and self.vie == True: #affiche le chronomètre et l'aide
             self.chronometre()
             self.aide()
+
+    def conversation(self):
+        pyxel.cls(0)
+        pyxel.blt(20, 92, 0, 0, 56, 18, 48, 8)
+        if self.i_conversation == 0 and pyxel.frame_count < self.temps + 20:
+            #pyxel.blt(100, 92, 0, 0, 120, 28, 22, 8)
+            pyxel.blt(100, 124, 0, 0, 104, 32, 16, 0)
+        elif self.i_conversation == 0 and pyxel.frame_count < self.temps + 50:
+            pyxel.blt(100, 113, 0, 24, 120, 32, 16, 0)
+            pyxel.blt(103, 120, 0, 0, 120, 24, 22, 8)
+            pyxel.blt(100, 129, 0, 0, 109, 32, 11, 0)
+        elif self.i_conversation == 0 and pyxel.frame_count < self.temps + 100:
+            pyxel.blt(100, 113, 0, 24, 120, 32, 16, 0)
+            pyxel.blt(103, 110, 0, 0, 120, 24, 22, 8)
+            pyxel.blt(100, 129, 0, 0, 109, 32, 11, 0)
+        elif self.i_conversation == 0 and pyxel.frame_count < self.temps + 150:
+            pyxel.blt(100, 113, 0, 24, 120, 32, 16, 0)
+            pyxel.blt(103, 100, 0, 0, 120, 24, 22, 8)
+            pyxel.blt(100, 129, 0, 0, 109, 32, 11, 0)
+        elif self.i_conversation == 0 and pyxel.frame_count < self.temps + 1200:
+            #pyxel.blt(100, 113, 0, 24, 120, 32, 16, 0)
+            pyxel.blt(103, 100, 0, 0, 120, 24, 22, 8)
+            pyxel.blt(100, 124, 0, 0, 104, 32, 16, 0)
+
 
     def salle_1(self):
         self.mur_fond_brique()
@@ -211,12 +252,15 @@ class App:
             if "clé" not in self.objet:
                 pyxel.text(162, 62, "On dirais une boite", 7)
                 pyxel.text(160, 68, "appuie sur la touche", 7)
-                pyxel.text(160, 73, "entree pour recuperer", 7)
+                pyxel.text(159, 74, "entree pour recuperer", 7)
                 pyxel.text(195, 80, "la cle", 7)
             if pyxel.btn(pyxel.KEY_RETURN):
                 self.objet.append("clé")
         if self.coordonnee_perso[0] > 15 and self.coordonnee_perso[0] < 40 and "clé" in self.objet and pyxel.btn(pyxel.KEY_RETURN):
             self.objet = []
+            self.etat = "découverte"
+            self.temps = pyxel.frame_count
+            self.vie = False
         pyxel.blt(self.coordonnee_perso[0], 92, 0, 0, 56, 18, 48, 8)
 
     def salle_2(self):
@@ -544,6 +588,8 @@ class App:
                     pyxel.blt(i_colonne*5, i_ligne*5, 1, 40, 112, 5, 5, 0)
         pyxel.rect(105, 0, 10, 10, 0) #la sortie en haut
         pyxel.rect(0, 130, 10, 10, 0) #la sortie en bas
+        pyxel.blt(107, 12, 0, 46, 34, 6, 6, 0) #flèche haut
+        pyxel.blt(2, 122, 0, 53, 34, 6, 6, 0) #flèche bas
         pyxel.circ(self.coordonnee_perso[0], self.coordonnee_perso[1], 3, 4) #le personnage
 
 

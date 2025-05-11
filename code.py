@@ -6,10 +6,10 @@ class App:
     def __init__(self):
         pyxel.init(240, 140, title="phantom castle", fps=50, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load("images.pyxres") #charger l'image
-        self.etat = "prison" #le stade du jeu
+        self.etat = "discussion" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [20, 95] #coordonnées du personnage
-        self.vitesse_perso = 1#vitesse du personnage
+        self.vitesse_perso = 5#vitesse du personnage
         #tableau représentant l'etat du labyrinthe, coupé en une grille de bloc de 5 par 5, chaque couple  ((0 : pas de bloc, 1 : un bloc), nombre de bloc d'affiler avec cet etat), 1 représente le couple (1, 1), 2 représente le couple (0, 2)
         self.tab_labyrinthe = [[(0,20),1,2,1,(0,16),1,(0,7)], [(0,20),1,2,1,(0,16),1,(0,7)], [2,(1,13),(0,5),1,2,1,2,(1,8),2,(1,5),2,(1,2),(0,3)], [2, 1,(0,8),1,2,1,2,(1,4),2,1,2,(1,3),(0,15),1,(0,3)], [2,1,(0,8),1,2,1,2,1,(0,5),1,(0,4),1,(0,15),1,(0,3)], [2,1,2,(1,4),2,1,2,1,2,1,(0,5),1,(0,4),(1,3),2,(1,5),2,(1,5),(0,3)], [2,1,2,1,2,1,2,1,2,1,2,1,2,(1,6),2,1,(0,8),1,2,1,2,1,(0,4)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,(0,8),1,2,1,2,1,2,(1,2)], [(0,5),1,2,1,2,1,2,1,(0,7),1,(0,5),1,2,(1,4),2,1,2,1,2,1,(0,4)], [(1,3),2,1,(0,5),1,2,(1,6),2,1,2,(1,4),2,1,(0,5),1,2,1,2,1,(0,4)], [(0,5),1,(0,5),1,(0,7),1,2,1,(0,8),1,(0,5),(1,4),2,(1,3),(0,2)], [(0,5),1,2,1,2,1,(0,7),1,2,1,(0,8),1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,2,(1,6),2,1,2,(1,4),2,1,2,1,2,1,(0,7),1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,2,(1,4),2,(1,3),2,1,(0,2)], [2,1,2,1,2,1,2,1,(0,4),1,(0,5),1,2,1,(0,5),1,(0,8),(1,3),2,1,(0,2)], [(1,3),2,1,2,1,2,(1,3),2,1,2,(1,4),2,1,2,(1,4),(0,8),(1,3),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,2,(1,15),2,1,(0,2)], [(0,8),1,2,1,(0,4),1,2,1,(0,5),1,(0,16),1,2,1,(0,2)], [2,(1,7),2,1,2,(1,3),2,(1,7),(0,16),1,2,1,(0,2)], [2,1,(0,8),1,(0,17),(1,14),2,1,(0,2)], [2,1,(0,8),1,(0,17),1,(0,15),1,(0,2)], [2,1,2,(1,9),2,(1,8),2,(1,4),(0,15),1,(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,2,(1,14),(0,2)], [2,1,(0,10),1,2,1,(0,9),1,2,1,(0,15),1,(0,2)], [2,(1,6),2,1,2,1,2,1,2,(1,5),2,1,2,1,(0,15),1,(0,2)], [2,1,(0,7),1,2,1,2,1,2,(1,5),2,1,2,1,2,(1,8),2,1,2,1,(0,2)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)], [2,1,(0,7),1,(0,5),1,(0,12),1,2,1,(0,9),1,(0,5)]]
         #construction du tableau avec tout les 0 et les 1
@@ -35,7 +35,8 @@ class App:
         self.etat_aide = False #afficher ou non la fenêtre avec les actions qu'on peut faire
         self.livre = 0
         self.objet = []
-        self.i_conversation = 0
+        self.i_conversation = 5
+        self.souris(True)
 
         pyxel.run(self.update, self.draw)
 
@@ -140,8 +141,10 @@ class App:
         elif self.etat == "mort foret": #le personnage meurt de froid dans la forêt
             self.cadre()
             pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
-            pyxel.text(30, 55, "Malheureusement vous vous etes toujours perdu.", 7)
+            pyxel.text(30, 55, "Malheureusement vous etes toujours perdu.", 7)
+            pyxel.blt(114, 53, 0, 61, 37, 3, 2, 0) #^
             pyxel.text(47, 65, "Apres plusieurs heures de marche", 7)
+            pyxel.blt(60, 63, 0, 64, 34, 2, 2, 0) #è
             pyxel.text(45, 75, "vous finissez par mourir de froid.", 7)
         elif self.etat == "grille": #affiche la grille, on voit le personnage entrer dans le chateau
             pyxel.cls(0)
@@ -165,48 +168,61 @@ class App:
             self.cadre()
             pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
             pyxel.text(65, 60, "Vous etes tombe dans un trou.", 7)
+            pyxel.blt(122, 58, 0, 61, 34, 2, 2, 0) #é
             pyxel.text(57, 70, "Vous avez fait une chute mortelle.", 7)
-        elif self.etat == "mort chrono": #le personnage n'a pas réussi à sortir dans les temps et il meurt
+        elif self.etat == "mort chrono" or self.etat == "mort labyrinthe temps": #le personnage n'a pas réussi à sortir dans les temps et il meurt
             self.cadre()
             pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
             pyxel.text(65, 60, "Vous avez mis trop de temps.", 7)
             pyxel.text(40, 70, "Vous finissez par mourir dans ce chateau.", 7)
+            pyxel.blt(192, 68, 0, 61, 37, 3, 2, 0) #â
         elif self.etat == "corde": #le personnage essai de s'évader de la prison grâce à la corde
             self.cadre()
             self.evasion()
-        elif self.etat == "mort labyrinthe temps": #le personnage n'a pas eu le temps de sortir du labyrinthe et meurt
-            self.cadre()
-            pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
-            pyxel.text(65, 60, "Vous avez mis trop de temps.", 7)
-            pyxel.text(40, 70, "Vous finissez par mourir dans ce chateau.", 7)
+
         elif self.etat == "mort prison temps": #le personnage n'a pas eu le temps de sortir de la prison et meurt
             self.cadre()
             pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
             pyxel.text(35, 60, "Vous n'avez pas reussi a sortir de la prison.", 7)
+            pyxel.blt(103, 58, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(128, 58, 0, 64, 34, 2, 2, 0) #à
             pyxel.text(25, 70, "Vous finissez par mourir de faim dans ce chateau.", 7)
+            pyxel.blt(197, 68, 0, 61, 37, 3, 2, 0) #â
         elif self.etat == "liberté prison" or self.etat == "liberté prison mort":
             self.cadre()
             pyxel.text(62, 50, "La corde etait assez solide.", 7)
-            pyxel.text(40, 60, "Tu reussi donc a t'echapper du chateau.", 7)
+            pyxel.blt(99, 48, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(40, 60, "Tu reussis donc a t'echapper du chateau.", 7)
+            pyxel.blt(57, 58, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(121, 58, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(105, 58, 0, 64, 34, 2, 2, 0) #à
+            pyxel.blt(188, 58, 0, 61, 37, 3, 2, 0) #â
+
             if self.etat == "liberté prison mort":
                 pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
-                pyxel.text(7, 70, "Malheureusement tu fini par mourir de faim dans la foret.", 7)
+                pyxel.text(6, 70, "Malheureusement tu finis par mourir de faim dans la foret.", 7)
+                pyxel.blt(226, 68, 0, 61, 37, 3, 2, 0) #ê
             else:
                 pyxel.text(30, 70, "Et tu reussi aussi a rentrer chez toi en vie.", 7)
+                pyxel.blt(59, 68, 0, 61, 34, 2, 2, 0) #é
+                pyxel.blt(107, 68, 0, 64, 34, 2, 2, 0) #à
         elif self.etat == "prison mort":
             self.cadre()
             pyxel.blt(115, 100, 0, 35, 104, 10, 16, 0)
             pyxel.text(30, 60, "Malheureusement la corde etait trop fragile.", 7)
-            pyxel.text(20, 70, "Elle s'est cassee et tu a fait un chute mortelle.", 7)
+            pyxel.blt(131, 58, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(20, 70, "Elle s'est cassee et tu as fait une chute mortelle.", 7)
+            pyxel.blt(81, 68, 0, 61, 34, 2, 2, 0) #é
         elif self.etat == "découverte":
-            pyxel.cls(0)
-            pyxel.text(50, 65, "Il y a un squelette dans le coffre,", 7)
+            self.cadre()
+            pyxel.text(54, 65, "Il y a un corps dans le coffre,", 7)
             pyxel.text(70, 75, "c'est celui d'un enfant.", 7)
             if self.temps + 250 < pyxel.frame_count:
-                self.etat = "discution"
+                self.etat = "discussion"
+                self.souris(True)
                 self.temps = pyxel.frame_count
 
-        elif self.etat == "discution":
+        elif self.etat == "discussion":
             self.conversation()
 
         if self.etat not in ["titre", "texte", "chateau", "corde", "mort prison temps", "mort labyrinthe temps"] and self.vie == True: #affiche le chronomètre et l'aide
@@ -214,27 +230,248 @@ class App:
             self.aide()
 
     def conversation(self):
-        pyxel.cls(0)
-        pyxel.blt(20, 92, 0, 0, 56, 18, 48, 8)
-        if self.i_conversation == 0 and pyxel.frame_count < self.temps + 20:
-            #pyxel.blt(100, 92, 0, 0, 120, 28, 22, 8)
-            pyxel.blt(100, 124, 0, 0, 104, 32, 16, 0)
-        elif self.i_conversation == 0 and pyxel.frame_count < self.temps + 50:
-            pyxel.blt(100, 113, 0, 24, 120, 32, 16, 0)
-            pyxel.blt(103, 120, 0, 0, 120, 24, 22, 8)
-            pyxel.blt(100, 129, 0, 0, 109, 32, 11, 0)
-        elif self.i_conversation == 0 and pyxel.frame_count < self.temps + 100:
-            pyxel.blt(100, 113, 0, 24, 120, 32, 16, 0)
-            pyxel.blt(103, 110, 0, 0, 120, 24, 22, 8)
-            pyxel.blt(100, 129, 0, 0, 109, 32, 11, 0)
-        elif self.i_conversation == 0 and pyxel.frame_count < self.temps + 150:
-            pyxel.blt(100, 113, 0, 24, 120, 32, 16, 0)
-            pyxel.blt(103, 100, 0, 0, 120, 24, 22, 8)
-            pyxel.blt(100, 129, 0, 0, 109, 32, 11, 0)
-        elif self.i_conversation == 0 and pyxel.frame_count < self.temps + 1200:
-            #pyxel.blt(100, 113, 0, 24, 120, 32, 16, 0)
-            pyxel.blt(103, 100, 0, 0, 120, 24, 22, 8)
-            pyxel.blt(100, 124, 0, 0, 104, 32, 16, 0)
+        self.mur_fond_brique()
+        pyxel.blt(40, 92, 0, 0, 56, 18, 48, 8)
+        if self.i_conversation != 0:
+            pyxel.blt(173, 91, 0, 0, 120, 24, 22, 8) #fantome
+            pyxel.blt(170, 124, 0, 0, 104, 32, 16, 0) #coffre
+        if self.i_conversation == 0:
+            if pyxel.frame_count < self.temps + 50:
+                pyxel.blt(170, 124, 0, 0, 104, 32, 16, 0) #­coffre
+            elif pyxel.frame_count < self.temps + 70:
+                pyxel.blt(170, 113, 0, 24, 120, 32, 16, 0) #haut du coffre
+                pyxel.blt(173, 120, 0, 0, 120, 24, 22, 8) #fantome
+                pyxel.blt(170, 129, 0, 0, 109, 32, 11, 0) #coffre
+            elif pyxel.frame_count < self.temps + 90:
+                pyxel.blt(170, 113, 0, 24, 120, 32, 16, 0) #haut du coffre
+                pyxel.blt(173, 110, 0, 0, 120, 24, 22, 8) #fantome
+                pyxel.blt(170, 129, 0, 0, 109, 32, 11, 0) #coffre
+            elif pyxel.frame_count < self.temps + 110:
+                pyxel.blt(170, 113, 0, 24, 120, 32, 16, 0) #haut du coffre
+                pyxel.blt(173, 100, 0, 0, 120, 24, 22, 8) #fantome
+                pyxel.blt(170, 129, 0, 0, 109, 32, 11, 0) #coffre
+            elif pyxel.frame_count < self.temps + 130:
+                pyxel.blt(173, 96, 0, 0, 120, 24, 22, 8) #fantome
+                pyxel.blt(170, 124, 0, 0, 104, 32, 16, 0) #coffre
+            else:
+                self.temps = pyxel.frame_count
+                self.i_conversation = 1
+        if self.i_conversation == 1 and self.temps + 10 < pyxel.frame_count: #fantome qui parle
+            pyxel.elli(105, 45, 70, 50, 13)
+            pyxel.blt(160, 85, 0, 53, 96, -10, 10, 0)
+            pyxel.text(110, 64, "Merci de m'avoir", 7)
+            pyxel.text(125, 72, "libere !", 7)
+            pyxel.blt(137, 70, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(146, 70, 0, 61, 34, 2, 2, 0) #é
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 2
+                self.temps = pyxel.frame_count
+
+
+        if self.i_conversation == 2 and self.temps + 10 < pyxel.frame_count: #personnage qui parle
+            pyxel.elli(55, 45, 70, 50, 13)
+            pyxel.blt(60, 85, 0, 53, 96, 10, 10, 0)
+            pyxel.text(68, 62, "Qui es-tu ?", 7)
+            pyxel.text(59, 70, "Que fais-tu la ?", 7)
+            pyxel.blt(112, 68, 0, 64, 34, 2, 2, 0) #à
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 3
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 3 and self.temps + 10 < pyxel.frame_count:
+            pyxel.elli(105, 45, 70, 50, 13)
+            pyxel.blt(160, 85, 0, 53, 96, -10, 10, 0)
+            pyxel.text(117, 53, "Je m'appelle", 7)
+            pyxel.text(109, 61, "Louis. Mon frere", 7)
+            pyxel.blt(162, 59, 0, 64, 34, 2, 2, 0) #è
+            pyxel.text(109, 69, "Jean m'a enferme", 7)
+            pyxel.blt(170, 67, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(112, 77, "dans ce coffre", 7)
+            pyxel.text(125, 85, "en 1868.", 7)
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 4
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 4 and self.temps + 10 < pyxel.frame_count:
+            pyxel.elli(105, 45, 70, 50, 13)
+            pyxel.blt(160, 85, 0, 53, 96, -10, 10, 0)
+            pyxel.text(122, 53, "Desole de", 7)
+            pyxel.blt(127, 51, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(143, 51, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(125, 63, "t'avoir", 7)
+            pyxel.text(110, 73, "emprisonne dans", 7)
+            pyxel.blt(147, 71, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(120, 83, "ce chateau.", 7)
+            pyxel.blt(152, 81, 0, 61, 37, 3, 2, 0) #â
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 5
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 5 and self.temps + 10 < pyxel.frame_count:
+            pyxel.elli(105, 45, 70, 50, 13)
+            pyxel.blt(160, 85, 0, 53, 96, -10, 10, 0)
+            pyxel.text(124, 49, "C'est la", 7)
+            pyxel.text(112, 56, "seule solution", 7)
+            pyxel.text(108, 63, "que j'ai trouvee", 7)
+            pyxel.blt(164, 61, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(109, 70, "pour que quelqu'", 7)
+            pyxel.text(111, 77, "un me libere de", 7)
+            pyxel.blt(148, 75, 0, 64, 34, 2, 2, 0) #è
+            pyxel.text(121, 84, "ce coffre.", 7)
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 6
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 6 and self.temps + 10 < pyxel.frame_count: #personnage qui parle
+            pyxel.elli(55, 40, 70, 55, 13)
+            #pyxel.blt(60, 85, 0, 53, 96, 10, 10, 0)
+            pyxel.text(69, 45, "- Repondre", 7)
+            pyxel.blt(82, 43, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(65, 52, "gentillement", 7)
+            pyxel.text(63, 59, "appuyer sur 0", 7)
+            pyxel.text(69, 66, "- Repondre", 7)
+            pyxel.blt(82, 64, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(71, 73, "mechamment", 7)
+            pyxel.blt(76, 71, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(75, 80, "appuyer", 7)
+            pyxel.text(80, 87, "sur 1", 7)
+            if pyxel.btn(pyxel.KEY_1) or pyxel.btn(pyxel.KEY_KP_1):
+                self.i_conversation = 7
+                self.temps = pyxel.frame_count
+            if pyxel.btn(pyxel.KEY_0) or pyxel.btn(pyxel.KEY_KP_0):
+                self.i_conversation = 9
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 7 and self.temps + 10 < pyxel.frame_count: #personnage qui parle
+            pyxel.elli(55, 40, 80, 60, 13)
+            pyxel.blt(59, 85, 0, 53, 96, 10, 10, 0)
+            pyxel.text(65, 50, "Je ne comprends", 7)
+            pyxel.text(70, 57, "pas ton geste.", 7)
+            pyxel.text(59, 64, "Tu m'a emprisonne,", 7)
+            pyxel.blt(124, 62, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(70, 71, "j'ai cru que", 7)
+            pyxel.text(65, 78, "j'allais mourir", 7)
+            pyxel.text(68, 85, "par ta faute !", 7)
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 8
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 8 and self.temps + 20 < pyxel.frame_count: #narrateur
+            self.cadre()
+            pyxel.text(50, 65, "Il ferma le coffre a cle et partit...", 7)
+            pyxel.blt(142, 63, 0, 61, 34, 2, 2, 0) #é
+            self.vie = False
+
+
+        if self.i_conversation == 9 and self.temps + 20 < pyxel.frame_count:
+            pyxel.elli(55, 45, 70, 50, 13)
+            pyxel.blt(60, 85, 0, 53, 96, 10, 10, 0)
+            pyxel.text(65, 55, "Je comprends", 7)
+            pyxel.text(64, 62, "ton geste, et", 7)
+            pyxel.text(60, 69, "je suis content", 7)
+            pyxel.text(70, 76, "de t'avoir", 7)
+            pyxel.text(75, 83, "libere !", 7)
+            pyxel.blt(88, 81, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(96, 81, 0, 61, 34, 2, 2, 0) #é
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 10
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 10 and self.temps + 20 < pyxel.frame_count:
+            pyxel.elli(55, 45, 75, 50, 13)
+            pyxel.blt(61, 85, 0, 53, 96, 10, 10, 0)
+            pyxel.text(65, 60, "j'ai vecu une", 7)
+            pyxel.blt(90, 58, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(57, 67, "histoire similaire", 7)
+            pyxel.text(65, 74, "avec mon pere.", 7)
+            pyxel.blt(105, 72, 0, 64, 34, 2, 2, 0) #è
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 11
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 11 and self.temps + 20 < pyxel.frame_count:
+            pyxel.elli(55, 45, 70, 50, 13)
+            pyxel.blt(60, 85, 0, 53, 96, 10, 10, 0)
+            pyxel.text(63, 55, "J'ai reussi a", 7)
+            pyxel.blt(88, 53, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(112, 53, 0, 64, 34, 2, 2, 0) #à
+            pyxel.text(60, 62, "m'echapper mais", 7)
+            pyxel.blt(69, 60, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(58, 69, "je me suis perdu", 7)
+            pyxel.text(64, 76, "dans la foret", 7)
+            pyxel.blt(108, 74, 0, 61, 37, 3, 2, 0) #ê
+            pyxel.text(78, 83, "noire.", 7)
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 12
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 12 and self.temps + 20 < pyxel.frame_count: #fantome qui parle
+            pyxel.elli(105, 45, 70, 50, 13)
+            pyxel.blt(160, 85, 0, 53, 96, -10, 10, 0)
+            pyxel.text(113, 57, "Veux-tu rester", 7)
+            pyxel.text(114, 64, "vivre dans le", 7)
+            pyxel.text(120, 71, "chateau et", 7)
+            pyxel.blt(128, 69, 0, 61, 37, 3, 2, 0) #â
+            pyxel.text(118, 78, "devenir mon", 7)
+            pyxel.text(130, 85, "ami ?", 7)
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 13
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 13 and self.temps + 20 < pyxel.frame_count: #personnage qui parle
+            pyxel.elli(55, 45, 70, 50, 13)
+            pyxel.text(61, 57, "- Repondre oui", 7)
+            pyxel.blt(74, 55, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(63, 64, "appuyer sur 0", 7)
+            pyxel.text(61, 71, "- Repondre non", 7)
+            pyxel.blt(74, 69, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(63, 78, "appuyer sur 1", 7)
+            if pyxel.btn(pyxel.KEY_1) or pyxel.btn(pyxel.KEY_KP_1):
+                self.i_conversation = 16
+                self.temps = pyxel.frame_count
+            if pyxel.btn(pyxel.KEY_0) or pyxel.btn(pyxel.KEY_KP_0):
+                self.i_conversation = 14
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 14 and self.temps + 20 < pyxel.frame_count: #personnage qui parle
+            pyxel.elli(55, 55, 70, 40, 13)
+            pyxel.blt(60, 85, 0, 53, 96, 10, 10, 0)
+            pyxel.text(83, 67, "Oui,", 7)
+            pyxel.text(65, 75, "avec plaisir.", 7)
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 15
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 15 and self.temps + 20 < pyxel.frame_count: #narrateur
+            self.cadre()
+            pyxel.text(30, 65, "Ils vecurent heureux jusqu'a la fin des temps...", 7)
+            pyxel.blt(51, 63, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(139, 63, 0, 64, 34, 2, 2, 0) #à
+            self.vie = False
+
+        if self.i_conversation == 16 and self.temps + 20 < pyxel.frame_count: #personnage qui parle
+            pyxel.elli(55, 45, 75, 50, 13)
+            pyxel.blt(60, 85, 0, 53, 96, 10, 10, 0)
+            pyxel.text(62, 56, "Je suis content", 7)
+            pyxel.text(59, 63, "de t'avoir libere", 7)
+            pyxel.blt(116, 61, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(124, 61, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(62, 70, "mais je prefere", 7)
+            pyxel.blt(103, 68, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(111, 68, 0, 64, 34, 2, 2, 0) #è
+            pyxel.text(74, 77, "continuer", 7)
+            pyxel.text(75, 84, "ma route.", 7)
+            if pyxel.btn(pyxel.KEY_RETURN):
+                self.i_conversation = 17
+                self.temps = pyxel.frame_count
+
+        if self.i_conversation == 17 and self.temps + 20 < pyxel.frame_count: #narrateur
+            self.cadre()
+            pyxel.text(55, 60, "Louis l'aida a retrouver son chemin", 7)
+            pyxel.blt(108, 58, 0, 64, 34, 2, 2, 0) #à
+            pyxel.text(57, 70, "et ils ne se revirent plus jamais.", 7)
+            self.vie = False
+
 
 
     def salle_1(self):
@@ -243,17 +480,21 @@ class App:
         pyxel.blt(200, 100, 0, 50, 63, 21, 9, 0)#étagère
         pyxel.blt(20, 124, 0, 0, 104, 32, 16, 0)#coffre
         if "clé" in self.objet:
-            pyxel.blt(self.coordonnee_perso[0] + 4, 65, 0, 52, 75, 50, 50, 0)
-        if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 145 and self.coordonnee_perso[0] < 160 and self.temps + 10 < pyxel.frame_count: #si on appuie sur la touche entrée quand le personnage se trouve sur la porte, le personnage sort de la pièce
+            pyxel.blt(self.coordonnee_perso[0] + 4, 65, 0, 52, 75, 9, 17, 0) #clé
+        if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 145 and self.coordonnee_perso[0] < 160 and self.temps + 10 < pyxel.frame_count and "clé" not in self.objet: #si on appuie sur la touche entrée quand le personnage se trouve sur la porte, le personnage sort de la pièce
             self.etat = "couloir"
             self.coordonnee_perso = [20, 92]
             self.temps = pyxel.frame_count
         if self.coordonnee_perso[0] > 190 and self.coordonnee_perso[0] < 225:
             if "clé" not in self.objet:
-                pyxel.text(162, 62, "On dirais une boite", 7)
-                pyxel.text(160, 68, "appuie sur la touche", 7)
-                pyxel.text(159, 74, "entree pour recuperer", 7)
-                pyxel.text(195, 80, "la cle", 7)
+                pyxel.text(162, 61, "On dirait une boite", 7)
+                pyxel.text(160, 69, "appuie sur la touche", 7)
+                pyxel.text(157, 77, "entree pour recuperer", 7)
+                pyxel.blt(174, 75, 0, 61, 34, 2, 2, 0) #é
+                pyxel.blt(210, 75, 0, 61, 34, 2, 2, 0) #é
+                pyxel.blt(226, 75, 0, 61, 34, 2, 2, 0) #é
+                pyxel.text(195, 85, "la cle", 7)
+                pyxel.blt(216, 83, 0, 61, 34, 2, 2, 0) #é
             if pyxel.btn(pyxel.KEY_RETURN):
                 self.objet.append("clé")
         if self.coordonnee_perso[0] > 15 and self.coordonnee_perso[0] < 40 and "clé" in self.objet and pyxel.btn(pyxel.KEY_RETURN):
@@ -267,15 +508,17 @@ class App:
         self.mur_fond_brique()
         pyxel.blt(100, 76, 0, 18, 40, 31, 64, 0)#bibliothèque
         pyxel.blt(30, 79, 1, 0, 112, 32, 64, 0)#porte
-        pyxel.blt(4, 90, 0, 50, 40, 22, 21, 0)#poster
+        pyxel.blt(4, 90, 0, 50, 40, 22, 21)#poster
         pyxel.blt(170, 85, 1, 32, 120, 48, 24, 8)#tableau
         if self.coordonnee_perso[0] > 200 and self.coordonnee_perso[0] < 215 and pyxel.btn(pyxel.KEY_RETURN) and self.temps + 10 < pyxel.frame_count:
             self.etat = "papier salle 2"
             self.temps = pyxel.frame_count
         if self.coordonnee_perso[0] < 25:
-            pyxel.text(1, 60, "On dirais", 7)
-            pyxel.text(1, 66, "un arbre", 7)
+            pyxel.text(1, 58, "On dirait", 7)
+            pyxel.text(1, 65, "un arbre", 7)
             pyxel.text(1, 72, "genealogique", 7)
+            pyxel.blt(5, 70, 0, 61, 34, 2, 2, 0) #é
+            pyxel.blt(15, 70, 0, 61, 34, 2, 2, 0) #é
         pyxel.blt(self.coordonnee_perso[0], 92, 0, 0, 56, 18, 48, 8)
         if self.coordonnee_perso[0] > 95 and self.coordonnee_perso[0] < 120:
             if pyxel.btn(pyxel.KEY_RETURN) and self.temps + 10 < pyxel.frame_count:
@@ -305,41 +548,32 @@ class App:
                 pyxel.text(85, 70, "J'ai peur.", 13)
                 pyxel.text(85, 80, "Aujourd'hui Jean", 13)
                 pyxel.text(85, 90, "m'a enferme dans", 13)
-                pyxel.text(85, 100, "le coffre a jouet.", 13)
+                pyxel.blt(126, 88, 0, 59, 34, 2, 2, 0) #é
+                pyxel.text(85, 100, "le coffre a jouets.", 13)
+                pyxel.blt(126, 98, 0, 66, 34, 2, 2, 0) #à
                 pyxel.text(85, 110, "J'y ai passe 3h.", 13)
+                pyxel.blt(130, 108, 0, 59, 34, 2, 2, 0) #é
             if self.livre == 2:
                 pyxel.rect(80, 20, 85, 100, 15)
                 pyxel.text(85, 30, "page 28", 13)
                 pyxel.text(85, 40, "17/02/1868", 13)
-                pyxel.text(85, 50, "Il a recomence.", 13)
+                pyxel.text(85, 50, "Il a recommence.", 13)
+                pyxel.blt(142, 48, 0, 59, 34, 2, 2, 0) #é
                 pyxel.text(85, 60, "J'ai ete enferme", 13)
+                pyxel.blt(106, 58, 0, 59, 34, 2, 2, 0) #é
+                pyxel.blt(114, 58, 0, 59, 34, 2, 2, 0) #é
+                pyxel.blt(146, 58, 0, 59, 34, 2, 2, 0) #é
                 pyxel.text(85, 70, "durant toute la nuit", 13)
                 pyxel.text(85, 80, "Je l'ai entendu", 13)
                 pyxel.text(85, 90, "ranger la cle dans", 13)
+                pyxel.blt(134, 88, 0, 59, 34, 2, 2, 0) #é
                 pyxel.text(85, 100, "une boite.", 13)
-                #pyxel.text(85, 110, "-------------------", 13)
             if self.livre == 3:
                 pyxel.rect(80, 20, 85, 100, 15)
                 pyxel.text(85, 30, "page 29", 13)
-                #pyxel.text(85, 40, "-------------------", 13)
-                #pyxel.text(85, 50, "-------------------", 13)
-                #pyxel.text(85, 60, "-------------------", 13)
-                #pyxel.text(85, 70, "-------------------", 13)
-                #pyxel.text(85, 80, "-------------------", 13)
-                #pyxel.text(85, 90, "-------------------", 13)
-                #pyxel.text(85, 100, "-------------------", 13)
-                #pyxel.text(85, 110, "-------------------", 13)
             if self.livre == 4:
                 pyxel.rect(80, 20, 85, 100, 15)
                 pyxel.text(85, 30, "page 30", 13)
-                #pyxel.text(85, 40, "-------------------", 13)
-                #pyxel.text(85, 50, "-------------------", 13)
-                #pyxel.text(85, 60, "-------------------", 13)
-                #pyxel.text(85, 70, "-------------------", 13)
-                #pyxel.text(85, 80, "-------------------", 13)
-                #pyxel.text(85, 90, "-------------------", 13)
-                #pyxel.text(85, 100, "-------------------", 13)
-                #pyxel.text(85, 110, "-------------------", 13)
         if pyxel.btn(pyxel.KEY_RETURN) and self.coordonnee_perso[0] > 33 and self.coordonnee_perso[0] < 53: #si on appuie sur la touche entrée quand le personnage se trouve sur la porte, le personnage sort de la pièce
             self.etat = "couloir"
 
@@ -348,14 +582,19 @@ class App:
 
 
     def evasion(self):
-        #pas fini
         """Le personnage tente de s'échapper de la prison, il a une chance sur cinq de sortir vivant, sinon la corde casse et il fait une chute mortelle."""
         pyxel.cls(0)
-        pyxel.text(15, 40, "Il y a assez de place pour passer entre les barreaux", 7)
-        pyxel.text(18, 50, "et on dirais qu'une corde est accrochee au barreau.", 7)
-        pyxel.text(55, 60, "Veut-tu tenter de t'echapper ?", 7)
-        pyxel.text(32, 80, "Appuie sur la touche entree pour t'echapper", 7)
-        pyxel.text(38, 90, "Appuie sur la touche effacer pour rester", 7)
+        pyxel.text(15, 35, "Il y a assez de place pour passer entre les barreaux", 7)
+        pyxel.text(18, 45, "et on dirait qu'une corde est accrochee au barreau.", 7)
+        pyxel.blt(166, 43, 0, 61, 34, 2, 2, 0) #é
+        pyxel.text(53, 55, "Elle n'a pas l'air tres solide.", 7)
+        pyxel.blt(138, 53, 0, 64, 34, 2, 2, 0) #è
+        pyxel.text(55, 65, "Veux-tu tenter de t'echapper ?", 7)
+        pyxel.blt(136, 63, 0, 61, 34, 2, 2, 0) #é
+        pyxel.text(32, 85, "Appuie sur la touche entree pour t'echapper", 7)
+        pyxel.blt(133, 83, 0, 61, 34, 2, 2, 0) #é
+        pyxel.blt(173, 83, 0, 61, 34, 2, 2, 0) #é
+        pyxel.text(38, 95, "Appuie sur la touche effacer pour rester", 7)
         if pyxel.btn(pyxel.KEY_RETURN) and self.temps + 20 < pyxel.frame_count:
             self.temps = pyxel.frame_count
             if random.choice([True, False]):
@@ -386,25 +625,32 @@ class App:
             pyxel.rect(70, 30, 100, 80, 0)
             if self.etat in ["prison", "couloir", "salle 2", 'salle 1', "papier salle 2"]:
                 pyxel.text(75, 40, '- utiliser les fleches', 7)
+                pyxel.blt(144, 38, 0, 64, 34, 2, 2, 0) #è
                 pyxel.text(75, 50, 'de direction pour', 7)
                 pyxel.text(75, 60, 'se deplacer', 7)
+                pyxel.blt(92, 58, 0, 61, 34, 2, 2, 0) #é
                 pyxel.blt(130, 60, 0, 39, 34, 6, 6, 0) #flèche gauche
                 pyxel.blt(140, 60, 0, 32, 34, 6, 6, 0) #flèche droite
                 pyxel.text(75, 70, '- utiliser la touche', 7)
-                pyxel.text(75, 80, 'entrer pour interagir', 7)
+                pyxel.text(75, 80, 'entree pour interagir', 7)
+                pyxel.blt(92, 78, 0, 61, 34, 2, 2, 0) #é
                 pyxel.text(75, 90, 'avec un objet', 7)
             if self.etat == "labyrinthe":
                 pyxel.text(75, 45, '- utiliser les fleches', 7)
+                pyxel.blt(144, 43, 0, 64, 34, 2, 2, 0) #è
                 pyxel.text(75, 55, 'de direction pour', 7)
                 pyxel.text(75, 65, 'se deplacer', 7)
+                pyxel.blt(92, 63, 0, 61, 34, 2, 2, 0) #é
                 pyxel.blt(105, 87, 0, 39, 34, 6, 6, 0) #flèche gauche
                 pyxel.blt(125, 87, 0, 32, 34, 6, 6, 0) #flèche droite
                 pyxel.blt(115, 77, 0, 46, 34, 6, 6, 0) #flèche haut
                 pyxel.blt(115, 97, 0, 53, 34, 6, 6, 0) #flèche bas
             if self.etat == "entrer dans le chateau":
                 pyxel.text(75, 45, '- utiliser les fleches', 7)
+                pyxel.blt(144, 43, 0, 64, 34, 2, 2, 0) #è
                 pyxel.text(75, 55, 'de direction pour', 7)
                 pyxel.text(75, 65, 'se deplacer', 7)
+                pyxel.blt(92, 63, 0, 61, 34, 2, 2, 0) #é
                 pyxel.blt(125, 65, 0, 39, 34, 6, 6, 0) #flèche gauche
                 pyxel.blt(135, 65, 0, 32, 34, 6, 6, 0) #flèche droite
 
@@ -461,6 +707,7 @@ class App:
         pyxel.text(85, 30, "Il y a 157 ans", 13)
         pyxel.text(85, 40, "il y eu un drame", 13)
         pyxel.text(85, 50, "dans ce chateau.", 13)
+        pyxel.blt(125, 48, 0, 64, 37, 3, 2, 0) #â
         pyxel.text(85, 60, "Quelqu'un est mort.", 13)
         pyxel.text(85, 70, "Trouver des indices", 13)
         pyxel.text(85, 80, "pour reconstituer", 13)
@@ -520,7 +767,7 @@ class App:
                 tab.append(self.tab_code[i])
             self.tab_code = tab
             self.temps = pyxel.frame_count
-        if len(self.tab_code) == 4 and pyxel.btn(pyxel.KEY_RETURN): #tester sa réponse
+        if len(self.tab_code) == 4: #tester sa réponse
             if self.tab_code == [1, 8, 6, 8]: #le code est bon
                 self.etat = "salle 1"
                 self.coordonnee_perso = [155, 92]
@@ -606,13 +853,13 @@ class App:
         pyxel.text(99, 85, "Danger", 13)#attention porte 3
         pyxel.blt(160, 85, 1, 32, 120, 43, 24, 8)#tableau
         if self.coordonnee_perso[0] > 11 and self.coordonnee_perso[0] < 33 and self.tab_code != [1, 8, 6, 8]:
-            pyxel.text(1, 60, "La porte est fermee.", 7)
-            pyxel.text(1, 66, "Il faut un code a 4 chiffres'", 7)
+            pyxel.text(1, 57, "La porte est fermee.", 7)
+            pyxel.blt(70, 55, 0, 61, 34, 2, 2, 0) #é
+            pyxel.text(1, 65, "Il faut un code a 4 chiffres", 7)
+            pyxel.blt(65, 63, 0, 61, 37, 3, 2, 0) #â
             pyxel.text(1, 72, "pour l'ouvrir.", 7)
         pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 56, 18, 48, 8)
-        #if bool:
 
-        #pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8)
 
 
     def ouverture_grille(self, temps):
@@ -662,7 +909,7 @@ class App:
             self.coordonnee_perso = [120, 90]
         if self.etat != "prison":
             if endroit == "dedans": #afficher le personnage derrière la grille
-                pyxel.blt(113, 92, 0, 0, 56, 18, 48, 8)
+                pyxel.blt(113, 92, 0, 0, 144, 18, 48, 8)
 
             #dessiner tous les barreaux de la grille
             #1
@@ -722,7 +969,7 @@ class App:
             pyxel.line(165, y, 165, 59, 7)
             pyxel.line(166, y - 1, 166, 61, 7)
             if endroit == "dehors": #permet d'afficher le personnage devant la grille
-                pyxel.blt(113, 92, 0, 0, 56, 18, 48, 8)
+                pyxel.blt(113, 92, 0, 0, 144, 18, 48, 8)
 
 
 
@@ -746,7 +993,7 @@ class App:
                 pyxel.blt(224, y, 1, 0, 41, 16, 15, 0)
             pyxel.blt(224, 105, 1, 0, 41, 16, 6, 0)
 
-        pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 33, 9, 23, 8) #le perso
+        pyxel.blt(self.coordonnee_perso[0], self.coordonnee_perso[1], 0, 0, 32, 9, 24, 8) #le perso
 
 
     def cadre(self):

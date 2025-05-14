@@ -6,7 +6,7 @@ class App:
     def __init__(self):
         pyxel.init(240, 140, title="phantom castle", fps=50, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load("images.pyxres") #charger l'image
-        self.etat = "discussion" #le stade du jeu
+        self.etat = "titre" #le stade du jeu
         self.temps = pyxel.frame_count #sert à stocker la valeur du temps, sera ensuite modifié pour faire des calculs
         self.coordonnee_perso = [20, 95] #coordonnées du personnage
         self.vitesse_perso = 1#vitesse du personnage
@@ -28,7 +28,7 @@ class App:
             t_labyrinthe.append(tab)
         self.tab_labyrinthe = t_labyrinthe
         self.tab_code = [] #utilisé pour stocker et vérifier si le code saisi par le joueur est correct
-        self.chrono = [5, 0] #temps total pour finir le jeu
+        self.chrono = [5, 0] #temps total pour finir le jeu [minutes, secondes]
         self.temps_prison = [0, 30] #temps total pour sortir de la prison
         self.temps_labyrinthe = [0, 40] #temps total pour sortir du labyrinthe
         self.vie = True #sert à savoir si le joueur est encore en vie
